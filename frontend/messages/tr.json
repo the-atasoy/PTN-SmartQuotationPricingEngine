@@ -1,0 +1,39 @@
+{
+  "nav": {
+    "products": "Ürünler",
+    "cart": "Sepet",
+    "admin": "Yönetim",
+    "logout": "Çıkış"
+  },
+  "products": {
+    "addToCart": "Sepete Ekle",
+    "category": "Kategori",
+    "basePrice": "Baz Fiyat"
+  },
+  "cart": {
+    "requestQuote": "Teklif Al",
+    "emailPlaceholder": "E-posta adresiniz",
+    "emptyCart": "Sepetiniz boş"
+  },
+  "admin": {
+    "uploadExcel": "Excel Yükle",
+    "sendQuotation": "Teklif İlet",
+    "noPreviousPrice": "Henüz teklif değeri girilmemiş",
+    "status": {
+      "Pending": "Beklemede",
+      "Sent": "Gönderildi",
+      "Cancelled": "İptal"
+    },
+    "validation": {
+      "priceRequired": "Birim fiyat 0'dan büyük olmalıdır",
+      "discountMin": "İndirim 0'dan küçük olamaz",
+      "discountMax": "İndirim 100'den büyük olamaz",
+      "atLeastOneItem": "En az bir ürün gereklidir"
+    }
+  },
+  "errors": {
+    "required": "Bu alan zorunludur",
+    "invalidEmail": "Geçerli bir e-posta giriniz",
+    "generic": "Bir hata oluştu"
+  }
+}
