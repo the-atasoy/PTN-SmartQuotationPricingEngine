@@ -57,35 +57,37 @@ export function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <div>
-        <label className="block text-sm font-medium mb-1">{t("email") || "Email"}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t("email") || "Email"}</label>
         <input
           type="email"
           {...register("email")}
-          className="w-full rounded-md border p-2"
+          className="w-full rounded-lg border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          placeholder="ornek@sirket.com"
         />
         {errors.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+          <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">{t("password") || "Password"}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t("password") || "Password"}</label>
         <input
           type="password"
           {...register("password")}
-          className="w-full rounded-md border p-2"
+          className="w-full rounded-lg border border-gray-300 bg-gray-50 text-gray-900 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          placeholder="••••••••"
         />
         {errors.password && (
-          <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+          <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
         )}
       </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+        className="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg text-sm font-semibold hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-2 cursor-pointer"
       >
         {isSubmitting ? (t("loggingIn") || "Logging in...") : (t("login") || "Login")}
       </button>

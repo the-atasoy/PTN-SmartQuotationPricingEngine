@@ -27,7 +27,7 @@ interface PaginatedResult {
 }
 
 export function ProductsClient() {
-  const { accessToken: token } = useAuth();
+  const { accessToken: token, isLoading: authLoading } = useAuth();
   const t = useTranslations("Products");
   const [productsData, setProductsData] = useState<PaginatedResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +66,11 @@ export function ProductsClient() {
 
     fetchProducts();
   }, [token, currentPage, pageSize, t]);
+
+  // While auth is being restored, show a loading state to avoid "unauthorized" flash
+  if (authLoading) {
+    return <div className="p-8 text-center text-gray-500">{t("loading")}</div>;
+  }
 
   if (!token) {
     return (

@@ -5,7 +5,9 @@ import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 import { Navbar } from "@/components/layout/Navbar";
 
-import { locales } from "@/i18n";
+import { routing } from "@/routing";
+
+const locales = routing.locales;
 
 export const dynamicParams = false;
 
