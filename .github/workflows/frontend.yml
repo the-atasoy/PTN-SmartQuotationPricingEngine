@@ -18,8 +18,4 @@ jobs:
         run: docker build --target lint ./frontend
 
       - name: Verify build output
-        run: |
-          docker run --rm \
-            -e NEXT_PUBLIC_API_URL=http://backend:5000 \
-            smart-quotation-frontend \
-            npm run build
+        run: docker build --target builder ./frontend
