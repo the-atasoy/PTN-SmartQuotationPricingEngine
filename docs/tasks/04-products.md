@@ -7,7 +7,7 @@ Agile task breakdown for product-related features. Depends on Epic 3 (Authentica
 ## TASK-013 — Get All Products Endpoint
 **Layer:** Backend — Application + API  
 **Description:**  
-Implement `GetAllProductsQuery` and `GetAllProductsQueryHandler`. Accepts `page` (default 1), `pageSize` (default 10). Returns `ApiResponse<PaginatedResult<ProductDto>>` with fields: id, name, base_price, last_request_price, last_request_date. Create `ProductsController` with `GET /api/products?page=1&pageSize=10` protected by `[Authorize(Roles = "User,Admin")]`.
+Implement `GetAllProductsQuery` and `GetAllProductsQueryHandler`. Accepts `page` (default 0), `pageSize` (default 10). Returns `ApiResponse<PaginatedResult<ProductDto>>` with fields: id, name, base_price, last_request_price, last_request_date. Create `ProductsController` with `GET /api/products?page=0&pageSize=10` protected by `[Authorize(Roles = "User,Admin")]`.
 
 **Acceptance Criteria:**
 - Returns `ApiResponse` with `isSuccessful: true` and a paginated list of products in `data`.
@@ -20,7 +20,7 @@ Implement `GetAllProductsQuery` and `GetAllProductsQueryHandler`. Accepts `page`
 ## TASK-014 — Get Price History Endpoint
 **Layer:** Backend — Application + API  
 **Description:**  
-Implement `GetPriceHistoryQuery` and `GetPriceHistoryQueryHandler`. Accepts `productId`, `page` (default 1), `pageSize` (default 10). Returns `ApiResponse<PaginatedResult<PriceHistoryDto>>` with fields: id, quoted_price, created_at, request_id, request_no, customer_name. Ordered by `created_at` descending. Add `GET /api/products/{id}/price-history?page=1&pageSize=10` to `ProductsController` protected by `[Authorize(Roles = "Admin")]`.
+Implement `GetPriceHistoryQuery` and `GetPriceHistoryQueryHandler`. Accepts `productId`, `page` (default 0), `pageSize` (default 10). Returns `ApiResponse<PaginatedResult<PriceHistoryDto>>` with fields: id, quoted_price, created_at, request_id, request_no, customer_name. Ordered by `created_at` descending. Add `GET /api/products/{id}/price-history?page=0&pageSize=10` to `ProductsController` protected by `[Authorize(Roles = "Admin")]`.
 
 **Acceptance Criteria:**
 - Returns `ApiResponse<PaginatedResult<PriceHistoryDto>>` with history rows for a valid product ID.
