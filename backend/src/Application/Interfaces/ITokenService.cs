@@ -1,11 +1,12 @@
-using System.Security.Claims;
 using Domain.Entities;
 
 namespace Application.Interfaces;
 
+/// <summary>The result of generating an access token.</summary>
+public record AccessTokenResult(string Token, long ExpiryUnixSeconds);
+
 public interface ITokenService
 {
-    string GenerateAccessToken(User user);
-    string GenerateRefreshToken();
-    ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+    AccessTokenResult GenerateAccessToken(User user);
+    string GenerateRefreshToken(Guid userId);
 }

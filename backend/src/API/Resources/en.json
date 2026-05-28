@@ -1,0 +1,8 @@
+{
+  "ProductNotFound": "Product not found.",
+  "InvalidCredentials": "Invalid email or password.",
+  "InvalidAccessToken": "Invalid access token.",
+  "InvalidAccessTokenClaims": "Invalid access token claims.",
+  "InvalidOrExpiredRefreshToken": "Invalid or expired refresh token.",
+  "InvalidRefreshToken": "Invalid refresh token."
+}

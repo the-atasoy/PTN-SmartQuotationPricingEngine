@@ -6,18 +6,29 @@
     "login": "Giriş",
     "loggingIn": "Giriş yapılıyor...",
     "loginSuccess": "Giriş başarılı",
-    "loginFailed": "Giriş başarısız"
+    "loginFailed": "Giriş başarısız",
+    "loginError": "Bir hata oluştu"
   },
   "nav": {
+    "title": "Akıllı Teklif",
     "products": "Ürünler",
     "cart": "Sepet",
     "admin": "Yönetim",
     "logout": "Çıkış"
   },
-  "products": {
+  "Products": {
     "addToCart": "Sepete Ekle",
     "category": "Kategori",
-    "basePrice": "Baz Fiyat"
+    "basePrice": "Baz Fiyat",
+    "unauthorized": "Yetkisiz erişim. Lütfen giriş yapın.",
+    "fetchFailed": "Ürünler alınamadı.",
+    "fetchError": "Ürünler alınırken bir hata oluştu.",
+    "loading": "Ürünler yükleniyor...",
+    "noProducts": "Mevcut ürün bulunmamaktadır.",
+    "title": "Ürünlerimiz",
+    "pageOf": "Sayfa {page} / {total}",
+    "lastQuote": "Son teklif",
+    "on": "tarihinde:"
   },
   "cart": {
     "requestQuote": "Teklif Al",

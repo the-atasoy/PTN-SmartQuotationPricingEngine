@@ -2,12 +2,12 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { API_ENDPOINTS, getApiUrl } from "@/lib/api-endpoints";
 
 interface AuthContextType {
   accessToken: string | null;
   role: string | null;
-  login: (token: string, role: string, exp: number) => void;
+  login: (token: string, role: string) => void;
   logout: () => void;
 }
 
@@ -17,59 +17,56 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const router = useRouter();
-  const locale = useLocale();
 
-  const login = React.useCallback((token: string, newRole: string, exp: number) => {
+  // auth_meta (role + exp) is now set as an HttpOnly cookie by the backend
+  // so that JS cannot forge it. The frontend only keeps the access token in memory.
+  const login = React.useCallback((token: string, newRole: string) => {
     setAccessToken(token);
     setRole(newRole);
-    // auth_meta used by middleware
-    document.cookie = `auth_meta=${JSON.stringify({ role: newRole, exp })}; path=/; max-age=604800; samesite=strict`;
   }, []);
 
   const logout = React.useCallback(async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+      await fetch(getApiUrl(API_ENDPOINTS.AUTH.LOGOUT), {
         method: "POST",
         headers: { "Authorization": `Bearer ${accessToken}` },
         credentials: "include"
       });
-    } catch (e) {
-      console.error(e);
+    } catch {
+      // Best-effort logout — clear state regardless
     }
     setAccessToken(null);
     setRole(null);
-    document.cookie = "auth_meta=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    router.push(`/${locale}/login`);
-  }, [accessToken, router, locale]);
+    router.push("/login");
+  }, [accessToken, router]);
 
   useEffect(() => {
-    // Attempt to restore session on load (Task-011 criteria)
-    // We don't have the access token stored. We only know if they should be logged in from auth_meta.
-    // So we can hit /api/auth/refresh if auth_meta exists.
+    // Attempt to restore session on load via the HttpOnly refresh token cookie.
+    // We only attempt this once (when there is no access token in memory).
     const restoreSession = async () => {
-      const hasAuthMeta = document.cookie.includes("auth_meta");
-      if (hasAuthMeta && !accessToken) {
-        try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ accessToken: "dummy" }),
-          });
-          const data = await res.json();
-          if (data.isSuccessful && data.data?.accessToken) {
-            const token = data.data.accessToken;
-            // Decode simple jwt payload
-            const payload = JSON.parse(atob(token.split(".")[1]));
-            login(token, payload.role, payload.exp);
-          }
-        } catch (e) {
-          console.error("Failed to restore session", e);
+      if (accessToken) return;
+      try {
+        const res = await fetch(getApiUrl(API_ENDPOINTS.AUTH.REFRESH), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include"
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.isSuccessful && data.data?.accessToken) {
+          const token = data.data.accessToken;
+          // Decode the JWT payload to extract the role claim
+          const payloadBase64 = token.split(".")[1];
+          const payload = JSON.parse(atob(payloadBase64));
+          login(token, payload.role);
         }
+      } catch {
+        // Network error or malformed token — leave user unauthenticated
       }
     };
     restoreSession();
-  }, [accessToken, login]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only on mount
 
   return (
     <AuthContext.Provider value={{ accessToken, role, login, logout }}>

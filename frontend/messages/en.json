@@ -6,18 +6,28 @@
     "login": "Login",
     "loggingIn": "Logging in...",
     "loginSuccess": "Logged in successfully",
-    "loginFailed": "Login failed"
+    "loginFailed": "Login failed",
+    "loginError": "An error occurred"
   },
   "nav": {
+    "title": "Smart Quotation",
     "products": "Products",
     "cart": "Cart",
     "admin": "Admin",
     "logout": "Logout"
   },
-  "products": {
+  "Products": {
     "addToCart": "Add to Cart",
     "category": "Category",
-    "basePrice": "Base Price"
+    "basePrice": "Base Price",
+    "unauthorized": "Unauthorized. Please log in.",
+    "fetchFailed": "Failed to fetch products.",
+    "fetchError": "An error occurred while fetching products.",
+    "loading": "Loading products...",
+    "noProducts": "No products available.",
+    "title": "Our Products",
+    "pageOf": "Page {page} of {total}",
+    "lastQuoteOnDate": "Last quote on {date}"
   },
   "cart": {
     "requestQuote": "Request Quote",

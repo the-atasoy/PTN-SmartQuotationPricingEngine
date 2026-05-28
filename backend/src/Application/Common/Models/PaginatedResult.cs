@@ -27,8 +27,8 @@ public class PaginatedResult<T>
             PageSize = pageSize,
             TotalCount = totalCount,
             TotalPages = totalPages,
-            HasNextPage = page < totalPages,
-            HasPreviousPage = page > 1
+            HasNextPage = page < totalPages - 1,
+            HasPreviousPage = page > 0
         };
     }
 }

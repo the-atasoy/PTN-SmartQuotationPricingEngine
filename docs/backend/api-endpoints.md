@@ -74,7 +74,7 @@ public class PaginatedResult<T>
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `page` | int | 1 | Page number (1-indexed) |
+| `page` | int | 0 | Page number (0-indexed) |
 | `pageSize` | int | 10 | Items per page (max: 50) |
 
 ### Paginated response example
@@ -82,7 +82,7 @@ public class PaginatedResult<T>
 {
   "data": {
     "items": [ ... ],
-    "page": 1,
+    "page": 0,
     "pageSize": 10,
     "totalCount": 42,
     "totalPages": 5,
@@ -179,13 +179,13 @@ Unhandled exceptions (e.g. `NotFoundException`, `UnauthorizedException`) are cau
 | Method | Route | Auth | Response Type | Description |
 |---|---|---|---|---|
 | GET | `/api/products` | `User`, `Admin` | `ApiResponse<List<ProductDto>>` | List all products with base price |
-| GET | `/api/products/{id}/price-history?page=1&pageSize=10` | `Admin` | `ApiResponse<PaginatedResult<PriceHistoryDto>>` | Paginated price history for a product |
+| GET | `/api/products/{id}/price-history?page=0&pageSize=10` | `Admin` | `ApiResponse<PaginatedResult<PriceHistoryDto>>` | Paginated price history for a product |
 
 ### Requests
 
 | Method | Route | Auth | Response Type | Description |
 |---|---|---|---|---|
-| GET | `/api/requests?page=1&pageSize=10` | `Admin` | `ApiResponse<PaginatedResult<RequestListItemDto>>` | Paginated list of quotation requests |
+| GET | `/api/requests?page=0&pageSize=10` | `Admin` | `ApiResponse<PaginatedResult<RequestListItemDto>>` | Paginated list of quotation requests |
 | GET | `/api/requests/{id}` | `Admin` | `ApiResponse<RequestDetailDto>` | Single request with items |
 | POST | `/api/requests` | `User` | File download | Create request + return Excel file as download |
 | PUT | `/api/requests/{id}/send` | `Admin` | `ApiResponse` | Finalize prices, send email, update product table |
