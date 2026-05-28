@@ -11,7 +11,10 @@ var app = builder.Build();
 
 // Apply pending migrations and seed data.
 app.MigrateDatabase();
-await DataSeeder.SeedAsync(app.Services);
+if (!app.Environment.IsProduction())
+{
+    await DataSeeder.SeedAsync(app.Services);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
