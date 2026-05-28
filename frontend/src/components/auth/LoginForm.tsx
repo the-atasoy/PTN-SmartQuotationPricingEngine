@@ -38,9 +38,12 @@ export function LoginForm() {
 
       if (responseData.isSuccessful && responseData.data?.accessToken) {
         const token = responseData.data.accessToken;
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        
-        login(token, payload.role, payload.exp);
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          login(token, payload.role);
+        } catch {
+          login(token, "User"); // fallback if payload decode fails
+        }
         toast.success(t("loginSuccess") || "Logged in successfully");
         router.push("/products");
       } else {

@@ -37,20 +37,24 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponse<Log
             return ApiResponse<LoginResponseDto>.Fail(_localizer["InvalidCredentials"].Value, 401);
         }
 
-        var accessToken = _tokenService.GenerateAccessToken(user);
-        var refreshToken = _tokenService.GenerateRefreshToken();
+        var accessTokenResult = _tokenService.GenerateAccessToken(user);
+        var refreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+        var refreshToken = _tokenService.GenerateRefreshToken(user.Id);
 
         // Hash the refresh token before storing it
         var refreshTokenHash = _passwordHasher.HashPassword(refreshToken);
-        
-        // Save to DB (Refresh token valid for 7 days)
-        user.UpdateRefreshToken(refreshTokenHash, DateTime.UtcNow.AddDays(7));
+
+        // Save to DB
+        user.UpdateRefreshToken(refreshTokenHash, refreshTokenExpiry);
         await _context.SaveChangesAsync(cancellationToken);
 
         return ApiResponse<LoginResponseDto>.Success(new LoginResponseDto
         {
-            AccessToken = accessToken,
-            RefreshToken = refreshToken
+            AccessToken = accessTokenResult.Token,
+            AccessTokenExpiry = accessTokenResult.ExpiryUnixSeconds,
+            Role = user.Role.ToString(),
+            RefreshToken = refreshToken,
+            RefreshTokenExpiry = refreshTokenExpiry
         });
     }
 }

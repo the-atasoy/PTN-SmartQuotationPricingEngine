@@ -20,9 +20,15 @@ export function middleware(request: NextRequest) {
   let exp: number | null = null;
 
   if (authMetaCookie) {
-    const parsed = JSON.parse(authMetaCookie.value);
-    role = parsed.role;
-    exp = parsed.exp;
+    try {
+      const parsed = JSON.parse(authMetaCookie.value);
+      role = parsed.role ?? null;
+      exp = parsed.exp ?? null;
+    } catch {
+      // Malformed cookie — treat as unauthenticated
+      role = null;
+      exp = null;
+    }
   }
 
   // Check if token is expired

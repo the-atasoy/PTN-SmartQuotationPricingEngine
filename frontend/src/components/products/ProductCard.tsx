@@ -29,7 +29,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
         </div>
 
-        {product.lastRequestPrice && (
+        {product.lastRequestPrice != null && product.lastRequestDate && (
           <div className="mt-2 text-sm text-gray-500">
             {t("lastQuote")}: ${product.lastRequestPrice.toFixed(2)}
             <br />
