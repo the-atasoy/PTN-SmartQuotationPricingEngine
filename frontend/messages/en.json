@@ -27,7 +27,9 @@
     "noProducts": "No products available.",
     "title": "Our Products",
     "pageOf": "Page {page} of {total}",
-    "lastQuoteOnDate": "Last quote on {date}"
+    "lastQuoteOnDate": "Last quote on {date}",
+    "lastQuote": "Last quote",
+    "on": "on"
   },
   "cart": {
     "requestQuote": "Request Quote",
