@@ -1,8 +1,6 @@
 name: Frontend CI
 
 on:
-  push:
-    paths: ['frontend/**']
   pull_request:
     paths: ['frontend/**']
 
@@ -17,10 +15,7 @@ jobs:
         run: docker build -t smart-quotation-frontend ./frontend
 
       - name: Run lint in container
-        run: |
-          docker run --rm \
-            smart-quotation-frontend \
-            npm run lint
+        run: docker build --target lint ./frontend
 
       - name: Verify build output
         run: |
