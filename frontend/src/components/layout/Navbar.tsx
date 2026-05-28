@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -47,14 +47,14 @@ export function Navbar() {
           {/* Right side actions */}
           <div className="flex items-center gap-3">
             {!isLoading && role !== "Admin" && (
-              <div className="relative p-1.5">
-                <ShoppingCart className="w-5 h-5 text-gray-600" />
+              <Link href="/cart" className="relative p-1.5 block group">
+                <ShoppingCart className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors" />
                 {totalItems > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full">
                     {totalItems}
                   </span>
                 )}
-              </div>
+              </Link>
             )}
 
             <LocaleSwitcher />

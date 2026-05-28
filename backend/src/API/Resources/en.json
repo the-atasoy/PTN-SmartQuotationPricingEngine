@@ -4,5 +4,12 @@
   "InvalidAccessToken": "Invalid access token.",
   "InvalidAccessTokenClaims": "Invalid access token claims.",
   "InvalidOrExpiredRefreshToken": "Invalid or expired refresh token.",
-  "InvalidRefreshToken": "Invalid refresh token."
+  "InvalidRefreshToken": "Invalid refresh token.",
+  "Excel_RequestNo": "Request No",
+  "Excel_ProductId": "Product ID",
+  "Excel_ProductName": "Product Name",
+  "Excel_Category": "Category",
+  "Excel_Quantity": "Quantity",
+  "Excel_General": "General",
+  "Excel_SheetName": "Quotation Request"
 }
