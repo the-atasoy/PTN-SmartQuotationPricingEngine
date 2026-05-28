@@ -1,19 +1,23 @@
 using Application.Common.Models;
 using Application.Interfaces;
+using Application.Resources;
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace Application.Requests.Commands.CreateRequest;
 
 public class CreateRequestCommandHandler : IRequestHandler<CreateRequestCommand, ApiResponse<Guid>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public CreateRequestCommandHandler(IApplicationDbContext context)
+    public CreateRequestCommandHandler(IApplicationDbContext context, IStringLocalizer<SharedResource> localizer)
     {
         _context = context;
+        _localizer = localizer;
     }
 
     public async Task<ApiResponse<Guid>> Handle(CreateRequestCommand request, CancellationToken cancellationToken)
@@ -26,11 +30,7 @@ public class CreateRequestCommandHandler : IRequestHandler<CreateRequestCommand,
 
         if (customer == null)
         {
-            // If customer doesn't exist, create a basic one using the email prefix as name if no name is available
-            var name = email.Split('@')[0];
-            customer = Customer.Create(name, email);
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync(cancellationToken); // Save to generate ID
+            return ApiResponse<Guid>.Fail(_localizer["CustomerNotFound"].Value, 404);
         }
 
         // 2. Generate request_no (RQ-YYYYMMDD-NNN)
@@ -54,7 +54,7 @@ public class CreateRequestCommandHandler : IRequestHandler<CreateRequestCommand,
         // 4. Create RequestItem rows
         foreach (var item in request.Items)
         {
-            newRequest.AddItem(item.ProductId, item.Quantity, 0, 0); // initial unit price is 0
+            newRequest.AddItem(item.ProductId, item.Quantity, 0); // initial unit price is 0
         }
 
         _context.Requests.Add(newRequest);

@@ -1,5 +1,6 @@
 {
   "ProductNotFound": "Ürün bulunamadı.",
+  "CustomerNotFound": "Belirtilen e-posta adresine sahip müşteri bulunamadı.",
   "InvalidCredentials": "E-posta veya şifre hatalı.",
   "InvalidAccessToken": "Geçersiz erişim tokeni.",
   "InvalidAccessTokenClaims": "Erişim tokeninde geçersiz haklar (claims).",

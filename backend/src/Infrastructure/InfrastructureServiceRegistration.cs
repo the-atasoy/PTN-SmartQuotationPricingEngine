@@ -1,6 +1,7 @@
 using Application;
 using Application.Interfaces;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.Interceptors;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,8 +15,15 @@ public static class InfrastructureServiceRegistration
     {
         services.AddApplication();
 
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<AuditableEntityInterceptor>();
+
+        services.AddDbContext<AppDbContext>((sp, options) =>
+        {
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            options.AddInterceptors(sp.GetRequiredService<AuditableEntityInterceptor>());
+        });
 
         services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<AppDbContext>());

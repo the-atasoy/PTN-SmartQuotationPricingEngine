@@ -14,7 +14,6 @@ public class Request : BaseEntity
     public decimal TotalAmount { get; private set; }
     public Currency Currency { get; private set; }
     public RequestStatus Status { get; private set; }
-    public DateTime? SentAt { get; private set; }
 
     // Navigation properties
     public Customer Customer { get; private set; } = default!;
@@ -39,9 +38,9 @@ public class Request : BaseEntity
         };
     }
 
-    public void AddItem(Guid productId, int quantity, decimal unitPrice, decimal discount = 0)
+    public void AddItem(Guid productId, int quantity, decimal unitPrice)
     {
-        var item = RequestItem.Create(Id, productId, quantity, unitPrice, discount);
+        var item = RequestItem.Create(Id, productId, quantity, unitPrice);
         _items.Add(item);
         RecalculateTotal();
     }
@@ -55,12 +54,12 @@ public class Request : BaseEntity
         RecalculateTotal();
     }
 
-    public void UpdateItem(Guid itemId, int quantity, decimal unitPrice, decimal discount)
+    public void UpdateItem(Guid itemId, int quantity, decimal unitPrice)
     {
         var item = _items.FirstOrDefault(i => i.Id == itemId)
             ?? throw new InvalidOperationException($"Item with id '{itemId}' not found in this request.");
 
-        item.Update(quantity, unitPrice, discount);
+        item.Update(quantity, unitPrice);
         RecalculateTotal();
     }
 
@@ -73,7 +72,6 @@ public class Request : BaseEntity
             throw new InvalidOperationException("Cannot send a request with no items.");
 
         Status = RequestStatus.Sent;
-        SentAt = DateTime.UtcNow;
     }
 
     public void Cancel()

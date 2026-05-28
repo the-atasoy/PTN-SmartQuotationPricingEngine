@@ -40,34 +40,4 @@ public class AppDbContext : DbContext, IApplicationDbContext
 
         base.OnModelCreating(modelBuilder);
     }
-
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        ApplyAuditInfo();
-        return base.SaveChangesAsync(cancellationToken);
-    }
-
-    public override int SaveChanges()
-    {
-        ApplyAuditInfo();
-        return base.SaveChanges();
-    }
-
-    private void ApplyAuditInfo()
-    {
-        foreach (var entry in ChangeTracker.Entries<BaseEntity>())
-        {
-            switch (entry.State)
-            {
-                case EntityState.Deleted:
-                    entry.State = EntityState.Modified;
-                    entry.Entity.Delete();
-                    break;
-
-                case EntityState.Modified:
-                    entry.Property(e => e.UpdatedAt).CurrentValue = DateTime.UtcNow;
-                    break;
-            }
-        }
-    }
 }
