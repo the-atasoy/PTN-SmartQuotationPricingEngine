@@ -5,6 +5,10 @@ namespace Application.Common.Models;
 
 public class PaginatedResult<T>
 {
+    private PaginatedResult()
+    {
+    }
+
     public IReadOnlyList<T> Items { get; init; } = Array.Empty<T>();
     public int Page { get; init; }
     public int PageSize { get; init; }
