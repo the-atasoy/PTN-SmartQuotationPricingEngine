@@ -1,6 +1,7 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -16,6 +17,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { role } = useAuth();
   const t = useTranslations("Products");
 
   return (
@@ -39,13 +41,15 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
 
-        <button
-          onClick={() => addToCart({ id: product.id, name: product.name, price: product.basePrice })}
-          className="mt-6 w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors font-medium"
-        >
-          <PlusCircle className="w-5 h-5" />
-          {t("addToCart")}
-        </button>
+        {role !== "Admin" && (
+          <button
+            onClick={() => addToCart({ id: product.id, name: product.name, price: product.basePrice })}
+            className="mt-6 w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors font-medium"
+          >
+            <PlusCircle className="w-5 h-5" />
+            {t("addToCart")}
+          </button>
+        )}
       </div>
     </div>
   );

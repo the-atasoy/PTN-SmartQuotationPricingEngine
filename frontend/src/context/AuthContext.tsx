@@ -7,6 +7,7 @@ import { API_ENDPOINTS, getApiUrl } from "@/lib/api-endpoints";
 interface AuthContextType {
   accessToken: string | null;
   role: string | null;
+  isLoading: boolean;
   login: (token: string, role: string) => void;
   logout: () => void;
 }
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   // auth_meta (role + exp) is now set as an HttpOnly cookie by the backend
@@ -44,7 +46,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Attempt to restore session on load via the HttpOnly refresh token cookie.
     // We only attempt this once (when there is no access token in memory).
     const restoreSession = async () => {
-      if (accessToken) return;
       try {
         const res = await fetch(getApiUrl(API_ENDPOINTS.AUTH.REFRESH), {
           method: "POST",
@@ -62,6 +63,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
       } catch {
         // Network error or malformed token — leave user unauthenticated
+      } finally {
+        setIsLoading(false);
       }
     };
     restoreSession();
@@ -69,7 +72,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []); // Run only on mount
 
   return (
-    <AuthContext.Provider value={{ accessToken, role, login, logout }}>
+    <AuthContext.Provider value={{ accessToken, role, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
