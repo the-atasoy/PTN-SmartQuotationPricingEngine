@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { API_ENDPOINTS, getApiUrl } from "@/lib/api-endpoints";
 
 interface AuthContextType {
   accessToken: string | null;
@@ -17,18 +17,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const router = useRouter();
-  const locale = useLocale();
 
   const login = React.useCallback((token: string, newRole: string, exp: number) => {
     setAccessToken(token);
     setRole(newRole);
     // auth_meta used by middleware
     document.cookie = `auth_meta=${JSON.stringify({ role: newRole, exp })}; path=/; max-age=604800; samesite=strict`;
+    localStorage.setItem("accessToken", token);
   }, []);
 
   const logout = React.useCallback(async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+      await fetch(getApiUrl(API_ENDPOINTS.AUTH.LOGOUT), {
         method: "POST",
         headers: { "Authorization": `Bearer ${accessToken}` },
         credentials: "include"
@@ -39,22 +39,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setAccessToken(null);
     setRole(null);
     document.cookie = "auth_meta=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    router.push(`/${locale}/login`);
-  }, [accessToken, router, locale]);
+    localStorage.removeItem("accessToken");
+    router.push("/login");
+  }, [accessToken, router]);
 
   useEffect(() => {
     // Attempt to restore session on load (Task-011 criteria)
     // We don't have the access token stored. We only know if they should be logged in from auth_meta.
-    // So we can hit /api/auth/refresh if auth_meta exists.
+    // So we can hit /api/v1/auth/refresh if auth_meta exists.
     const restoreSession = async () => {
       const hasAuthMeta = document.cookie.includes("auth_meta");
-      if (hasAuthMeta && !accessToken) {
+      const savedToken = localStorage.getItem("accessToken");
+      if (hasAuthMeta && !accessToken && savedToken) {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
+          const res = await fetch(getApiUrl(API_ENDPOINTS.AUTH.REFRESH), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({ accessToken: "dummy" }),
+            body: JSON.stringify({ accessToken: savedToken }),
           });
           const data = await res.json();
           if (data.isSuccessful && data.data?.accessToken) {

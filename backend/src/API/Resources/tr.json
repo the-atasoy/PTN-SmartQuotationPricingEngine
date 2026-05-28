@@ -1,0 +1,8 @@
+{
+  "ProductNotFound": "Ürün bulunamadı.",
+  "InvalidCredentials": "E-posta veya şifre hatalı.",
+  "InvalidAccessToken": "Geçersiz erişim tokeni.",
+  "InvalidAccessTokenClaims": "Erişim tokeninde geçersiz haklar (claims).",
+  "InvalidOrExpiredRefreshToken": "Geçersiz veya süresi dolmuş yenileme tokeni.",
+  "InvalidRefreshToken": "Geçersiz yenileme tokeni."
+}

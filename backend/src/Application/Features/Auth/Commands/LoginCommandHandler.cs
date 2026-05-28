@@ -1,8 +1,10 @@
 using Application.Common.Models;
 using Application.Features.Auth.Dtos;
 using Application.Interfaces;
+using Application.Resources;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace Application.Features.Auth.Commands;
 
@@ -11,12 +13,18 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponse<Log
     private readonly IApplicationDbContext _context;
     private readonly ITokenService _tokenService;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public LoginCommandHandler(IApplicationDbContext context, ITokenService tokenService, IPasswordHasher passwordHasher)
+    public LoginCommandHandler(
+        IApplicationDbContext context,
+        ITokenService tokenService,
+        IPasswordHasher passwordHasher,
+        IStringLocalizer<SharedResource> localizer)
     {
         _context = context;
         _tokenService = tokenService;
         _passwordHasher = passwordHasher;
+        _localizer = localizer;
     }
 
     public async Task<ApiResponse<LoginResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -26,7 +34,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponse<Log
 
         if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
         {
-            return ApiResponse<LoginResponseDto>.Fail("Invalid email or password.", 401);
+            return ApiResponse<LoginResponseDto>.Fail(_localizer["InvalidCredentials"].Value, 401);
         }
 
         var accessToken = _tokenService.GenerateAccessToken(user);

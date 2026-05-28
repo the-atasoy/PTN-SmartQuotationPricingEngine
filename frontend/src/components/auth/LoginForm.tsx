@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -7,25 +8,26 @@ import { loginSchema, LoginFormData } from "@/lib/validations/auth";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { API_ENDPOINTS, getApiUrl } from "@/lib/api-endpoints";
 
 export function LoginForm() {
   const t = useTranslations("Auth");
   const { login } = useAuth();
   const router = useRouter();
-  const locale = useLocale();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
+      setIsSubmitting(true);
+      const res = await fetch(getApiUrl(API_ENDPOINTS.AUTH.LOGIN), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -40,12 +42,14 @@ export function LoginForm() {
         
         login(token, payload.role, payload.exp);
         toast.success(t("loginSuccess") || "Logged in successfully");
-        router.push(`/${locale}/products`);
+        router.push("/products");
       } else {
         toast.error(responseData.message || t("loginFailed") || "Login failed");
       }
     } catch {
-      toast.error(t("loginFailed") || "An unexpected error occurred");
+      toast.error(t("loginError") || "An unexpected error occurred");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
