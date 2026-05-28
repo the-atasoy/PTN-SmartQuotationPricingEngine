@@ -31,10 +31,10 @@ services:
   backend:
     build: ./backend
     ports:
-      - "5000:5000"
+      - "5100:5100"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5100
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=smart_quotation;Username=postgres;Password=postgres
       - Jwt__Secret=change-me-in-production
       - Jwt__Issuer=smart-quotation
@@ -45,7 +45,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:5000/health || exit 1"]
+      test: ["CMD-SHELL", "curl -fsS http://localhost:5100/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -56,7 +56,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:5000
+      - NEXT_PUBLIC_API_URL=http://backend:5100
       - NEXT_PUBLIC_DEFAULT_LOCALE=tr
     depends_on:
       postgres:
