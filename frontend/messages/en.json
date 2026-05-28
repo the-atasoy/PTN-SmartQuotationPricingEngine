@@ -34,7 +34,9 @@
   "cart": {
     "requestQuote": "Request Quote",
     "emailPlaceholder": "Your email address",
-    "emptyCart": "Your cart is empty"
+    "emptyCart": "Your cart is empty",
+    "requestSuccess": "Quotation request submitted successfully.",
+    "requestFailed": "Failed to submit request."
   },
   "admin": {
     "uploadExcel": "Upload Excel",

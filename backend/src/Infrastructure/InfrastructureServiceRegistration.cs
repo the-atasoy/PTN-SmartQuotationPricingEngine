@@ -22,6 +22,7 @@ public static class InfrastructureServiceRegistration
 
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IExcelService, ExcelService>();
 
         return services;
     }

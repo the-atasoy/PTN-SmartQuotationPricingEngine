@@ -7,8 +7,9 @@ import { API_ENDPOINTS, getApiUrl } from "@/lib/api-endpoints";
 interface AuthContextType {
   accessToken: string | null;
   role: string | null;
+  email: string | null;
   isLoading: boolean;
-  login: (token: string, role: string) => void;
+  login: (token: string, role: string, email: string) => void;
   logout: () => void;
 }
 
@@ -17,14 +18,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   // auth_meta (role + exp) is now set as an HttpOnly cookie by the backend
   // so that JS cannot forge it. The frontend only keeps the access token in memory.
-  const login = React.useCallback((token: string, newRole: string) => {
+  const login = React.useCallback((token: string, newRole: string, newEmail: string) => {
     setAccessToken(token);
     setRole(newRole);
+    setEmail(newEmail);
   }, []);
 
   const logout = React.useCallback(async () => {
@@ -39,6 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
     setAccessToken(null);
     setRole(null);
+    setEmail(null);
     router.push("/login");
   }, [accessToken, router]);
 
@@ -56,10 +60,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const data = await res.json();
         if (data.isSuccessful && data.data?.accessToken) {
           const token = data.data.accessToken;
-          // Decode the JWT payload to extract the role claim
+          // Decode the JWT payload to extract the role and email claims
           const payloadBase64 = token.split(".")[1];
           const payload = JSON.parse(atob(payloadBase64));
-          login(token, payload.role);
+          // Email claim name might be "email" or "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+          const emailClaim = payload.email || payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
+          login(token, payload.role, emailClaim);
         }
       } catch {
         // Network error or malformed token — leave user unauthenticated
@@ -72,7 +78,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []); // Run only on mount
 
   return (
-    <AuthContext.Provider value={{ accessToken, role, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ accessToken, role, email, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -6,10 +6,13 @@ export const API_ENDPOINTS = {
   },
   PRODUCTS: {
     GET_ALL: "/api/v1/products",
+  },
+  REQUESTS: {
+    CREATE: "/api/v1/requests",
   }
 };
 
 export const getApiUrl = (endpoint: string) => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5100";
   return `${baseUrl}${endpoint}`;
 };

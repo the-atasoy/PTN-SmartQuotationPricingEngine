@@ -40,9 +40,10 @@ export function LoginForm() {
         const token = responseData.data.accessToken;
         try {
           const payload = JSON.parse(atob(token.split(".")[1]));
-          login(token, payload.role);
+          const emailClaim = payload.email || payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || "";
+          login(token, payload.role, emailClaim);
         } catch {
-          login(token, "User"); // fallback if payload decode fails
+          login(token, "User", ""); // fallback if payload decode fails
         }
         toast.success(t("loginSuccess") || "Logged in successfully");
         router.push("/products");

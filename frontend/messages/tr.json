@@ -33,7 +33,9 @@
   "cart": {
     "requestQuote": "Teklif Al",
     "emailPlaceholder": "E-posta adresiniz",
-    "emptyCart": "Sepetiniz boş"
+    "emptyCart": "Sepetiniz boş",
+    "requestSuccess": "Teklif talebi başarıyla oluşturuldu.",
+    "requestFailed": "Teklif talebi oluşturulamadı."
   },
   "admin": {
     "uploadExcel": "Excel Yükle",

@@ -4,5 +4,12 @@
   "InvalidAccessToken": "Geçersiz erişim tokeni.",
   "InvalidAccessTokenClaims": "Erişim tokeninde geçersiz haklar (claims).",
   "InvalidOrExpiredRefreshToken": "Geçersiz veya süresi dolmuş yenileme tokeni.",
-  "InvalidRefreshToken": "Geçersiz yenileme tokeni."
+  "InvalidRefreshToken": "Geçersiz yenileme tokeni.",
+  "Excel_RequestNo": "Talep No",
+  "Excel_ProductId": "Ürün ID",
+  "Excel_ProductName": "Ürün Adı",
+  "Excel_Category": "Kategori",
+  "Excel_Quantity": "Miktar",
+  "Excel_General": "Genel",
+  "Excel_SheetName": "Teklif Talebi"
 }
