@@ -19,6 +19,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const locale = useLocale();
 
+  const login = React.useCallback((token: string, newRole: string, exp: number) => {
+    setAccessToken(token);
+    setRole(newRole);
+    // auth_meta used by middleware
+    document.cookie = `auth_meta=${JSON.stringify({ role: newRole, exp })}; path=/; max-age=604800; samesite=strict`;
+  }, []);
+
+  const logout = React.useCallback(async () => {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${accessToken}` },
+        credentials: "include"
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    setAccessToken(null);
+    setRole(null);
+    document.cookie = "auth_meta=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    router.push(`/${locale}/login`);
+  }, [accessToken, router, locale]);
+
   useEffect(() => {
     // Attempt to restore session on load (Task-011 criteria)
     // We don't have the access token stored. We only know if they should be logged in from auth_meta.
@@ -46,30 +69,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
     restoreSession();
-  }, [accessToken]);
-
-  const login = (token: string, newRole: string, exp: number) => {
-    setAccessToken(token);
-    setRole(newRole);
-    // auth_meta used by middleware
-    document.cookie = `auth_meta=${JSON.stringify({ role: newRole, exp })}; path=/; max-age=604800; samesite=strict`;
-  };
-
-  const logout = async () => {
-    try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
-        method: "POST",
-        headers: { "Authorization": `Bearer ${accessToken}` },
-        credentials: "include"
-      });
-    } catch (e) {
-      console.error(e);
-    }
-    setAccessToken(null);
-    setRole(null);
-    document.cookie = "auth_meta=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    router.push(`/${locale}/login`);
-  };
+  }, [accessToken, login]);
 
   return (
     <AuthContext.Provider value={{ accessToken, role, login, logout }}>

@@ -44,7 +44,7 @@ export function LoginForm() {
       } else {
         toast.error(responseData.message || t("loginFailed") || "Login failed");
       }
-    } catch (error) {
+    } catch {
       toast.error(t("loginFailed") || "An unexpected error occurred");
     }
   };
