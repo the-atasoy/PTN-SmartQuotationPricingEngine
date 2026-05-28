@@ -10,6 +10,7 @@
     "loginError": "An error occurred"
   },
   "nav": {
+    "title": "Smart Quotation",
     "products": "Products",
     "cart": "Cart",
     "admin": "Admin",
