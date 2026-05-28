@@ -8,6 +8,8 @@ public class User : BaseEntity
     public string Email { get; private set; } = default!;
     public string PasswordHash { get; private set; } = default!;
     public UserRole Role { get; private set; }
+    public string? RefreshTokenHash { get; private set; }
+    public DateTime? RefreshTokenExpiryTime { get; private set; }
 
     private User() { } // EF Core
 
@@ -25,5 +27,17 @@ public class User : BaseEntity
             PasswordHash = passwordHash,
             Role = role
         };
+    }
+
+    public void UpdateRefreshToken(string refreshTokenHash, DateTime expiryTime)
+    {
+        RefreshTokenHash = refreshTokenHash;
+        RefreshTokenExpiryTime = expiryTime;
+    }
+
+    public void RevokeRefreshToken()
+    {
+        RefreshTokenHash = null;
+        RefreshTokenExpiryTime = null;
     }
 }

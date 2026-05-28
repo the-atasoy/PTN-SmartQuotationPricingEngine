@@ -1,4 +1,13 @@
 {
+  "Auth": {
+    "loginTitle": "Giriş Yap",
+    "email": "E-posta",
+    "password": "Şifre",
+    "login": "Giriş",
+    "loggingIn": "Giriş yapılıyor...",
+    "loginSuccess": "Giriş başarılı",
+    "loginFailed": "Giriş başarısız"
+  },
   "nav": {
     "products": "Ürünler",
     "cart": "Sepet",
