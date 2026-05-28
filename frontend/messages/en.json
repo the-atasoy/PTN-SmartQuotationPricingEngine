@@ -1,0 +1,39 @@
+{
+  "nav": {
+    "products": "Products",
+    "cart": "Cart",
+    "admin": "Admin",
+    "logout": "Logout"
+  },
+  "products": {
+    "addToCart": "Add to Cart",
+    "category": "Category",
+    "basePrice": "Base Price"
+  },
+  "cart": {
+    "requestQuote": "Request Quote",
+    "emailPlaceholder": "Your email address",
+    "emptyCart": "Your cart is empty"
+  },
+  "admin": {
+    "uploadExcel": "Upload Excel",
+    "sendQuotation": "Send Quotation",
+    "noPreviousPrice": "No quotation value has been entered yet",
+    "status": {
+      "Pending": "Pending",
+      "Sent": "Sent",
+      "Cancelled": "Cancelled"
+    },
+    "validation": {
+      "priceRequired": "Unit price must be greater than 0",
+      "discountMin": "Discount cannot be less than 0",
+      "discountMax": "Discount cannot be greater than 100",
+      "atLeastOneItem": "At least one product is required"
+    }
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Enter a valid email",
+    "generic": "Something went wrong"
+  }
+}

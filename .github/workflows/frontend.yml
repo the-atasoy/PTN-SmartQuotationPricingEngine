@@ -1,0 +1,21 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    paths: ['frontend/**']
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build frontend Docker image
+        run: docker build -t smart-quotation-frontend ./frontend
+
+      - name: Run lint in container
+        run: docker build --target lint ./frontend
+
+      - name: Verify build output
+        run: docker build --target builder ./frontend
