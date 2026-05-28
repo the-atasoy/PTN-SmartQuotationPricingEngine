@@ -15,6 +15,8 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 RUN npm run build
 
 FROM base AS runner
@@ -33,11 +35,12 @@ CMD ["node", "server.js"]
 
 ```yaml
 frontend:
-  build: ./frontend
+  build: 
+    context: ./frontend
+    args:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
   ports:
     - "3000:3000"
-  environment:
-    - NEXT_PUBLIC_API_URL=http://backend:5000
   depends_on:
     - backend
 ```
