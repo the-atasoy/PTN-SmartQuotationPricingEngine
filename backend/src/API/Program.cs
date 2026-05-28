@@ -77,7 +77,7 @@ if (app.Environment.IsDevelopment())
 
 var supportedCultures = new[] { "en", "tr" };
 var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture("en")
+    .SetDefaultCulture("tr")
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
 
