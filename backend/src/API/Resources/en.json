@@ -1,5 +1,6 @@
 {
   "ProductNotFound": "Product not found.",
+  "CustomerNotFound": "Customer with the specified email does not exist.",
   "InvalidCredentials": "Invalid email or password.",
   "InvalidAccessToken": "Invalid access token.",
   "InvalidAccessTokenClaims": "Invalid access token claims.",

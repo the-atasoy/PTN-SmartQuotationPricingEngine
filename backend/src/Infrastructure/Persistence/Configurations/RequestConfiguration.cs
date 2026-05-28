@@ -38,9 +38,6 @@ public class RequestConfiguration : BaseEntityConfiguration<Request>
 
         builder.HasIndex(r => r.Status);
 
-        builder.Property(r => r.SentAt)
-            .HasColumnName("sent_at");
-
         // Items — owned by this aggregate
         builder.HasMany(r => r.Items)
             .WithOne(i => i.Request)
