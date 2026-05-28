@@ -20,13 +20,9 @@ export function middleware(request: NextRequest) {
   let exp: number | null = null;
 
   if (authMetaCookie) {
-    try {
-      const parsed = JSON.parse(authMetaCookie.value);
-      role = parsed.role;
-      exp = parsed.exp;
-    } catch (e) {
-      console.error("Failed to parse auth_meta cookie", e);
-    }
+    const parsed = JSON.parse(authMetaCookie.value);
+    role = parsed.role;
+    exp = parsed.exp;
   }
 
   // Check if token is expired

@@ -37,8 +37,6 @@ export function ProductsClient() {
 
   useEffect(() => {
     if (!token) {
-      setError(t("unauthorized"));
-      setIsLoading(false);
       return;
     }
 
@@ -59,7 +57,7 @@ export function ProductsClient() {
         } else {
           setError(data.message || t("fetchFailed"));
         }
-      } catch (err) {
+      } catch {
         setError(t("fetchError"));
       } finally {
         setIsLoading(false);
@@ -67,7 +65,15 @@ export function ProductsClient() {
     };
 
     fetchProducts();
-  }, [token, currentPage, pageSize]);
+  }, [token, currentPage, pageSize, t]);
+
+  if (!token) {
+    return (
+      <div className="p-8 text-center text-red-600">
+        <p className="font-semibold">{t("unauthorized")}</p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return <div className="p-8 text-center text-gray-500">{t("loading")}</div>;

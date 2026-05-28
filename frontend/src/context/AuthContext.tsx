@@ -27,15 +27,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const logout = React.useCallback(async () => {
-    try {
-      await fetch(getApiUrl(API_ENDPOINTS.AUTH.LOGOUT), {
-        method: "POST",
-        headers: { "Authorization": `Bearer ${accessToken}` },
-        credentials: "include"
-      });
-    } catch (e) {
-      console.error(e);
-    }
+    await fetch(getApiUrl(API_ENDPOINTS.AUTH.LOGOUT), {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${accessToken}` },
+      credentials: "include"
+    });
     setAccessToken(null);
     setRole(null);
     document.cookie = "auth_meta=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
@@ -51,22 +47,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const hasAuthMeta = document.cookie.includes("auth_meta");
       const savedToken = localStorage.getItem("accessToken");
       if (hasAuthMeta && !accessToken && savedToken) {
-        try {
-          const res = await fetch(getApiUrl(API_ENDPOINTS.AUTH.REFRESH), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ accessToken: savedToken }),
-          });
-          const data = await res.json();
-          if (data.isSuccessful && data.data?.accessToken) {
-            const token = data.data.accessToken;
-            // Decode simple jwt payload
-            const payload = JSON.parse(atob(token.split(".")[1]));
-            login(token, payload.role, payload.exp);
-          }
-        } catch (e) {
-          console.error("Failed to restore session", e);
+        const res = await fetch(getApiUrl(API_ENDPOINTS.AUTH.REFRESH), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ accessToken: savedToken }),
+        });
+        const data = await res.json();
+        if (data.isSuccessful && data.data?.accessToken) {
+          const token = data.data.accessToken;
+          // Decode simple jwt payload
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          login(token, payload.role, payload.exp);
         }
       }
     };
