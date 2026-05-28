@@ -1,13 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
+import { routing } from "./routing";
 
-const intlMiddleware = createIntlMiddleware({
-  locales: ["tr", "en"],
-  defaultLocale: "tr",
-  localePrefix: "never",
-  localeCookie: { name: "NEXT_LOCALE" }
-});
+const intlMiddleware = createIntlMiddleware(routing);
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
