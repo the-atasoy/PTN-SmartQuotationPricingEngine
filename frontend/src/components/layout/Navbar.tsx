@@ -61,7 +61,7 @@ export function Navbar() {
 
             <button
               onClick={logout}
-              className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-red-600 transition-colors"
+              className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-red-600 transition-colors cursor-pointer"
               title={t("logout")}
             >
               <LogOut className="w-4 h-4" />

@@ -14,7 +14,7 @@ export function LocaleSwitcher() {
   return (
     <button
       onClick={switchLocale}
-      className="text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium"
+      className="text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium cursor-pointer"
     >
       {locale === "tr" ? "EN" : "TR"}
     </button>
