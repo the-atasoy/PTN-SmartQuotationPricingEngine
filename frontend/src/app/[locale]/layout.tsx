@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { AuthProvider } from "@/context/AuthContext";
 
 import { locales } from "@/i18n";
 
@@ -27,7 +28,9 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
+      <AuthProvider>
+        {children}
+      </AuthProvider>
     </NextIntlClientProvider>
   );
 }
