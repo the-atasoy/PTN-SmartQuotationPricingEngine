@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setRole(newRole);
     // auth_meta used by middleware
     document.cookie = `auth_meta=${JSON.stringify({ role: newRole, exp })}; path=/; max-age=604800; samesite=strict`;
-    localStorage.setItem("accessToken", token);
   }, []);
 
   const logout = React.useCallback(async () => {
@@ -35,7 +34,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setAccessToken(null);
     setRole(null);
     document.cookie = "auth_meta=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    localStorage.removeItem("accessToken");
     router.push("/login");
   }, [accessToken, router]);
 
@@ -45,13 +43,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // So we can hit /api/v1/auth/refresh if auth_meta exists.
     const restoreSession = async () => {
       const hasAuthMeta = document.cookie.includes("auth_meta");
-      const savedToken = localStorage.getItem("accessToken");
-      if (hasAuthMeta && !accessToken && savedToken) {
+      if (hasAuthMeta && !accessToken) {
         const res = await fetch(getApiUrl(API_ENDPOINTS.AUTH.REFRESH), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({ accessToken: savedToken }),
         });
         const data = await res.json();
         if (data.isSuccessful && data.data?.accessToken) {
