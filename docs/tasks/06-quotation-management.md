@@ -7,7 +7,7 @@ Agile task breakdown for the admin quotation management flow. Depends on Epic 5 
 ## TASK-018 — Get All Requests Endpoint
 **Layer:** Backend — Application + API  
 **Description:**  
-Implement `GetAllRequestsQuery` and `GetAllRequestsQueryHandler`. Accepts `page` (default 1), `pageSize` (default 10). Returns `ApiResponse<PaginatedResult<RequestListItemDto>>` with fields: id, request_no, customer_name, customer_email, total_amount, currency, status, created_at, sent_at. Ordered by `created_at` descending. Add `GET /api/requests?page=1&pageSize=10` to `RequestsController` protected by `[Authorize(Roles = "Admin")]`.
+Implement `GetAllRequestsQuery` and `GetAllRequestsQueryHandler`. Accepts `page` (default 0), `pageSize` (default 10). Returns `ApiResponse<PaginatedResult<RequestListItemDto>>` with fields: id, request_no, customer_name, customer_email, total_amount, currency, status, created_at, sent_at. Ordered by `created_at` descending. Add `GET /api/requests?page=0&pageSize=10` to `RequestsController` protected by `[Authorize(Roles = "Admin")]`.
 
 **Acceptance Criteria:**
 - Returns `ApiResponse<PaginatedResult<RequestListItemDto>>` with paginated requests.
@@ -70,7 +70,7 @@ Add `PUT /api/requests/{id}/send` to `RequestsController` protected by `[Authori
 ## TASK-022 — Admin Requests List Page
 **Layer:** Frontend  
 **Description:**  
-Create `/[locale]/admin/requests/page.tsx`. Fetch from `GET /api/requests?page=1&pageSize=10`. Read `ApiResponse<PaginatedResult<RequestListItemDto>>`. Render `RequestsTable` with columns: Request No, Customer Name, Customer Email, Date, Total Amount + Currency, Status. Status rendered as color-coded `Badge` (Pending → yellow, Sent → green, Cancelled → red). Each row is clickable and navigates to `/admin/requests/[id]`. Localize status labels. Render pagination controls (previous/next, page numbers) using `PaginatedResult` metadata.
+Create `/[locale]/admin/requests/page.tsx`. Fetch from `GET /api/requests?page=0&pageSize=10`. Read `ApiResponse<PaginatedResult<RequestListItemDto>>`. Render `RequestsTable` with columns: Request No, Customer Name, Customer Email, Date, Total Amount + Currency, Status. Status rendered as color-coded `Badge` (Pending → yellow, Sent → green, Cancelled → red). Each row is clickable and navigates to `/admin/requests/[id]`. Localize status labels. Render pagination controls (previous/next, page numbers) using `PaginatedResult` metadata.
 
 **Acceptance Criteria:**
 - All requests render with correct data.
@@ -109,7 +109,7 @@ Create `/[locale]/admin/requests/[id]/page.tsx`. Fetch request detail from `GET 
 ## TASK-024 — Product Price History Page
 **Layer:** Frontend  
 **Description:**  
-Create `/[locale]/admin/products/[id]/history/page.tsx`. Fetch from `GET /api/products/{id}/price-history?page=1&pageSize=10`. Read `ApiResponse<PaginatedResult<PriceHistoryDto>>`. Render `PriceHistoryTable` with columns: Date, Quoted Price, Request No, Customer Name. Sorted descending by date (already from API). Render pagination controls using `PaginatedResult` metadata. Add a link to this page from product rows in the `QuotationEditor` (product name as clickable link, opens in new tab).
+Create `/[locale]/admin/products/[id]/history/page.tsx`. Fetch from `GET /api/products/{id}/price-history?page=0&pageSize=10`. Read `ApiResponse<PaginatedResult<PriceHistoryDto>>`. Render `PriceHistoryTable` with columns: Date, Quoted Price, Request No, Customer Name. Sorted descending by date (already from API). Render pagination controls using `PaginatedResult` metadata. Add a link to this page from product rows in the `QuotationEditor` (product name as clickable link, opens in new tab).
 
 **Acceptance Criteria:**
 - All history rows for a product are displayed with pagination.

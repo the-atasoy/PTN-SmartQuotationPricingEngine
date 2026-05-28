@@ -39,10 +39,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`/products`, request.url));
   }
 
-  // Authenticated `User` role accessing any `/admin/*` route -> redirect to /products
+  // Authenticated `User` role accessing any `/admin` or `/admin/*` route -> redirect to /products
   if (isAuthenticated && role === "User") {
-    // Check if path contains /admin/
-    if (pathname.startsWith("/admin/")) {
+    // Check if path is /admin or starts with /admin/
+    if (pathname === "/admin" || pathname.startsWith("/admin/")) {
       return NextResponse.redirect(new URL(`/products`, request.url));
     }
   }
