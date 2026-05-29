@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/Input";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/Button";
 import { formatCurrencyEnum } from "@/lib/enums";
+import { formatPrice } from "@/lib/utils";
 
 export function ProductsClient() {
   const { accessToken: token, isLoading: authLoading, role } = useAuth();
