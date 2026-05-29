@@ -1,5 +1,8 @@
 # Smart Quotation & Pricing Engine
 
+![Backend CI](https://github.com/the-atasoy/PTN-SmartQuotationPricingEngine/actions/workflows/backend.yml/badge.svg)
+![Frontend CI](https://github.com/the-atasoy/PTN-SmartQuotationPricingEngine/actions/workflows/frontend.yml/badge.svg)
+
 *Read this in [Türkçe](README.tr.md)*
 
 This project is a quotation management simulation developed for hardware products (HMI, Led Panel, LCD). The system allows users to select products and get quotations from a Next.js interface; while administrators (Admin) price these requests via an Excel file and send them to the customer. When a quotation is sent, the last price and date information of the products are automatically updated and stored as history.
@@ -12,7 +15,7 @@ This project is a quotation management simulation developed for hardware product
 ## 🚀 Technologies Used
 
 - **Frontend:** Next.js (App Router), Tailwind CSS, TypeScript, `next-intl` (Multi-language support)
-- **Backend:** .NET 10, Entity Framework Core (Code-First), MediatR (CQRS Pattern)
+- **Backend:** .NET 10, Entity Framework Core (Code-First), MediatR (CQRS Pattern), DDD
 - **Database:** PostgreSQL 16
 - **Other Tools:** Docker & Docker Compose, Mailpit (Local SMTP Server), EPPlus (Excel Operations)
 
@@ -130,3 +133,31 @@ Separate CI workflows are prepared for Frontend and Backend using GitHub Actions
 1. Docker images are built.
 2. (For Frontend) Lint checks and prod build operations are verified inside the container.
 3. The stability of the architectural structure (prod vs dev) is ensured.
+
+---
+
+## 📚 Documentation
+
+For detailed information about the project architecture, setup, and various components, please refer to the documentation:
+
+### General
+- [Running Locally](docs/running-locally.md)
+- [Deployment & CI/CD](docs/deployment.md)
+
+### Backend
+- [Architecture](docs/backend/architecture.md)
+- [API Endpoints](docs/backend/api-endpoints.md)
+- [Database](docs/backend/database.md)
+- [Email Services](docs/backend/email.md)
+- [Localization](docs/backend/localization.md)
+- [Docker Setup](docs/backend/docker.md)
+
+### Frontend
+- [Architecture](docs/frontend/architecture.md)
+- [Pages & Routing](docs/frontend/pages.md)
+- [State Management](docs/frontend/state-management.md)
+- [API Client](docs/frontend/api-client.md)
+- [Authentication](docs/frontend/authentication.md)
+- [Validation](docs/frontend/validation.md)
+- [Localization](docs/frontend/localization.md)
+- [Docker Setup](docs/frontend/docker.md)

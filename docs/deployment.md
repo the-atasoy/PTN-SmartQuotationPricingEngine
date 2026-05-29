@@ -95,8 +95,8 @@ jobs:
 Add these to your `README.md`:
 
 ```markdown
-![Backend CI](https://github.com/<owner>/<repo>/actions/workflows/backend.yml/badge.svg)
-![Frontend CI](https://github.com/<owner>/<repo>/actions/workflows/frontend.yml/badge.svg)
+![Backend CI](https://github.com/the-atasoy/PTN-SmartQuotationPricingEngine/actions/workflows/backend.yml/badge.svg)
+![Frontend CI](https://github.com/the-atasoy/PTN-SmartQuotationPricingEngine/actions/workflows/frontend.yml/badge.svg)
 ```
 
 ---

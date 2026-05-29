@@ -1,5 +1,8 @@
 # Smart Quotation & Pricing Engine
 
+![Backend CI](https://github.com/the-atasoy/PTN-SmartQuotationPricingEngine/actions/workflows/backend.yml/badge.svg)
+![Frontend CI](https://github.com/the-atasoy/PTN-SmartQuotationPricingEngine/actions/workflows/frontend.yml/badge.svg)
+
 *Bu dokümanı [İngilizce](README.md) okuyun*
 
 Bu proje, donanım ürünleri (HMI, Led Panel, LCD) için geliştirilmiş bir teklif yönetim simülasyonudur. Sistem, kullanıcıların Next.js arayüzünden ürün seçip teklif almasını; yöneticilerin ise (Admin) bu talepleri bir Excel dosyası aracılığıyla fiyatlandırmasını ve müşteriye iletmesini sağlar. Teklif iletildiğinde, ürünlerin son fiyat ve tarih bilgileri otomatik olarak güncellenir ve tarihçe (history) olarak saklanır.
@@ -12,7 +15,7 @@ Bu proje, donanım ürünleri (HMI, Led Panel, LCD) için geliştirilmiş bir te
 ## 🚀 Kullanılan Teknolojiler
 
 - **Frontend:** Next.js (App Router), Tailwind CSS, TypeScript, `next-intl` (Çoklu dil desteği)
-- **Backend:** .NET 10, Entity Framework Core (Code-First), MediatR (CQRS Pattern)
+- **Backend:** .NET 10, Entity Framework Core (Code-First), MediatR (CQRS Pattern), DDD
 - **Veritabanı:** PostgreSQL 16
 - **Diğer Araçlar:** Docker & Docker Compose, Mailpit (Lokal SMTP Sunucusu), EPPlus (Excel İşlemleri)
 
@@ -130,3 +133,31 @@ Projede GitHub Actions kullanılarak Frontend ve Backend için ayrı CI workflow
 1. Docker imajları derlenir.
 2. (Frontend için) Lint kontrolleri ve prod build işlemleri konteyner içerisinde doğrulanır.
 3. Mimari yapının (prod vs dev) stabilitesi güvence altına alınır.
+
+---
+
+## 📚 Dokümantasyon
+
+Proje mimarisi, kurulum ve çeşitli bileşenler hakkında detaylı bilgi için lütfen dokümantasyonları inceleyin:
+
+### Genel
+- [Lokalde Çalıştırma (Running Locally)](docs/running-locally.md)
+- [Dağıtım ve CI/CD (Deployment)](docs/deployment.md)
+
+### Backend
+- [Mimari (Architecture)](docs/backend/architecture.md)
+- [API Uç Noktaları (API Endpoints)](docs/backend/api-endpoints.md)
+- [Veritabanı (Database)](docs/backend/database.md)
+- [E-Posta Servisleri (Email Services)](docs/backend/email.md)
+- [Çoklu Dil Desteği (Localization)](docs/backend/localization.md)
+- [Docker Yapılandırması (Docker Setup)](docs/backend/docker.md)
+
+### Frontend
+- [Mimari (Architecture)](docs/frontend/architecture.md)
+- [Sayfalar ve Yönlendirme (Pages & Routing)](docs/frontend/pages.md)
+- [Durum Yönetimi (State Management)](docs/frontend/state-management.md)
+- [API İstemcisi (API Client)](docs/frontend/api-client.md)
+- [Kimlik Doğrulama (Authentication)](docs/frontend/authentication.md)
+- [Doğrulama (Validation)](docs/frontend/validation.md)
+- [Çoklu Dil Desteği (Localization)](docs/frontend/localization.md)
+- [Docker Yapılandırması (Docker Setup)](docs/frontend/docker.md)
