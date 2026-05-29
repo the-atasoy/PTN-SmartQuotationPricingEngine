@@ -22,6 +22,7 @@ export interface RequestItemDetailDto {
   unitPrice: number;
   discount: number;
   lineTotal: number;
+  basePrice?: number;
   lastRequestPrice?: number;
   lastRequestCurrency?: number;
   lastRequestDate?: string;

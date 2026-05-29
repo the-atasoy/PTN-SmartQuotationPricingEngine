@@ -53,6 +53,7 @@ public class GetRequestByIdQueryHandler : IRequestHandler<GetRequestByIdQuery, A
                 UnitPrice = i.UnitPrice,
                 LineTotal = i.LineTotal,
                 Discount = i.Discount,
+                BasePrice = i.Product.BasePrice,
                 LastRequestPrice = i.Product.LastRequestPrice,
                 LastRequestCurrency = i.Product.LastRequestCurrency,
                 LastRequestDate = i.Product.LastRequestDate

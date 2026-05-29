@@ -53,8 +53,9 @@ export default function AdminRequestDetailPage() {
             lastRequestPrice: i.lastRequestPrice,
             lastRequestCurrency: i.lastRequestCurrency,
             lastRequestDate: i.lastRequestDate,
+            basePrice: i.basePrice,
             discount: 0,
-            unitPrice: i.lastRequestCurrency === requestCurrency ? (i.lastRequestPrice ?? 0) : 0,
+            unitPrice: i.basePrice ?? 0,
           }));
           setParsedItems(initialParsed);
 
@@ -63,10 +64,7 @@ export default function AdminRequestDetailPage() {
             { unitPrice: number; discount: number; lineTotal: number }
           > = {};
           initialParsed.forEach((item) => {
-            const unitPrice =
-              item.lastRequestCurrency === requestCurrency
-                ? (item.lastRequestPrice ?? 0)
-                : 0;
+            const unitPrice = item.basePrice ?? 0;
             initialPricing[item.productId] = {
               unitPrice,
               discount: 0,
@@ -105,12 +103,9 @@ export default function AdminRequestDetailPage() {
           { unitPrice: number; discount: number; lineTotal: number }
         > = {};
         res.data.forEach((item: ParsedExcelResultDto) => {
-          const canUseLastPrice =
-            requestCurrency != null &&
-            item.lastRequestCurrency === requestCurrency;
           const unitPrice =
             item.unitPrice ??
-            (canUseLastPrice ? item.lastRequestPrice : undefined) ??
+            item.basePrice ??
             0;
           const discount = item.discount ?? 0;
           initialPricing[item.productId] = {

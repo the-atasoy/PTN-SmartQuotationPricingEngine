@@ -8,9 +8,12 @@ import { Product, PaginatedResult } from "@/lib/types/api";
 import { Pagination } from "@/components/common/Pagination";
 import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/Input";
+import { useCart } from "@/context/CartContext";
+import { Button } from "@/components/ui/Button";
 
 export function ProductsClient() {
   const { accessToken: token, isLoading: authLoading } = useAuth();
+  const { addToCart, updateQuantity, items: cartItems } = useCart();
   const t = useTranslations("Products");
   const [productsData, setProductsData] = useState<PaginatedResult<Product> | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -110,7 +113,7 @@ export function ProductsClient() {
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-200">
                 <th 
-                  className="px-6 py-4 text-sm font-semibold text-slate-600 cursor-pointer group hover:bg-slate-100/50 transition-colors w-1/2"
+                  className="px-6 py-4 text-sm font-semibold text-slate-600 cursor-pointer group hover:bg-slate-100/50 transition-colors w-2/5"
                   onClick={() => handleSort("Name")}
                 >
                   <div className="flex items-center">
@@ -118,50 +121,94 @@ export function ProductsClient() {
                   </div>
                 </th>
                 <th 
-                  className="px-6 py-4 text-sm font-semibold text-slate-600 cursor-pointer group hover:bg-slate-100/50 transition-colors w-1/2"
+                  className="px-6 py-4 text-sm font-semibold text-slate-600 cursor-pointer group hover:bg-slate-100/50 transition-colors w-2/5"
                   onClick={() => handleSort("BasePrice")}
                 >
                   <div className="flex items-center">
                     Base Price {renderSortIcon("BasePrice")}
                   </div>
                 </th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600 w-1/5 text-right">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isLoading && !productsData ? (
                 <tr>
-                  <td colSpan={2} className="px-6 py-12 text-center">
+                  <td colSpan={3} className="px-6 py-12 text-center">
                     <div className="flex justify-center"><Spinner /></div>
                   </td>
                 </tr>
               ) : error ? (
                 <tr>
-                  <td colSpan={2} className="px-6 py-8 text-center text-red-500 font-medium">
+                  <td colSpan={3} className="px-6 py-8 text-center text-red-500 font-medium">
                     {error}
                   </td>
                 </tr>
               ) : productsData?.items.length === 0 ? (
                 <tr>
-                  <td colSpan={2} className="px-6 py-12 text-center text-slate-500">
+                  <td colSpan={3} className="px-6 py-12 text-center text-slate-500">
                     No products found matching your search.
                   </td>
                 </tr>
               ) : (
-                productsData?.items.map((product) => (
-                  <tr 
-                    key={product.id} 
-                    className="hover:bg-slate-50/80 transition-colors duration-200 group"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-slate-900 group-hover:text-slate-700 transition-colors">
-                        {product.name}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-slate-600">
-                      ${product.basePrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </td>
-                  </tr>
-                ))
+                productsData?.items.map((product) => {
+                  const cartItem = cartItems.find(item => item.productId === product.id);
+                  const quantity = cartItem ? cartItem.quantity : 0;
+                  
+                  return (
+                    <tr 
+                      key={product.id} 
+                      className="hover:bg-slate-50/80 transition-colors duration-200 group"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="font-medium text-slate-900 group-hover:text-slate-700 transition-colors">
+                          {product.name}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-slate-600">
+                        ${product.basePrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        {quantity > 0 ? (
+                          <div className="flex items-center justify-end gap-3">
+                            <button 
+                              onClick={() => updateQuantity(product.id, quantity - 1)}
+                              className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400"
+                              aria-label="Decrease quantity"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </button>
+                            <span className="w-4 text-center font-medium text-slate-700">{quantity}</span>
+                            <button 
+                              onClick={() => updateQuantity(product.id, quantity + 1)}
+                              className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400"
+                              aria-label="Increase quantity"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </button>
+                          </div>
+                        ) : (
+                          <Button
+                            variant="primary"
+                            onClick={() => addToCart({ id: product.id, name: product.name, price: product.basePrice })}
+                            className="rounded-full shadow-sm"
+                          >
+                            <span className="flex items-center gap-2">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                              </svg>
+                              Add to Cart
+                            </span>
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
