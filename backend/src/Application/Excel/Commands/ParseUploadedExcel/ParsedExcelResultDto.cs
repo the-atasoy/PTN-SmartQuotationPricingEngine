@@ -12,7 +12,6 @@ public class ParsedExcelResultDto
     public Currency? LastRequestCurrency { get; set; }
     public DateTime? LastRequestDate { get; set; }
     public bool HasPreviousPrice { get; set; }
-    public decimal BasePrice { get; set; }
     public decimal? UnitPrice { get; init; }
     public decimal Discount { get; init; }
 }

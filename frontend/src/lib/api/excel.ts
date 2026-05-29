@@ -10,7 +10,6 @@ export interface ParsedExcelResultDto {
   lastRequestCurrency?: number;
   lastRequestDate?: string;
   hasPreviousPrice: boolean;
-  basePrice?: number;
   unitPrice?: number;
   discount: number;
 }

@@ -11,7 +11,6 @@ public class RequestItemDetailDto
     public decimal UnitPrice { get; init; }
     public decimal LineTotal { get; init; }
     public decimal Discount { get; init; }
-    public decimal BasePrice { get; init; }
     public decimal? LastRequestPrice { get; init; }
     public Currency? LastRequestCurrency { get; init; }
     public DateTime? LastRequestDate { get; init; }

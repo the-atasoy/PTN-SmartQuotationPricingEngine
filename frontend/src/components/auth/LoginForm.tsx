@@ -50,11 +50,7 @@ export function LoginForm() {
             login(token, "User", ""); // fallback if payload decode fails
           }
           toast.success(t("loginSuccess") || "Logged in successfully");
-          if (role === "Admin") {
-            router.push("/admin");
-          } else {
-            router.push("/products");
-          }
+          router.push("/");
         } else {
         toast.error(responseData.message || t("loginFailed") || "Login failed");
       }

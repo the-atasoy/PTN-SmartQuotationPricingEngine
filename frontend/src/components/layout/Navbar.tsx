@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/navigation";
+import { Link, usePathname } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -11,6 +11,8 @@ export function Navbar() {
   const t = useTranslations("nav");
   const { totalItems } = useCart();
   const { role, logout, isLoading } = useAuth();
+  const pathname = usePathname();
+  const isLoginPage = pathname === "/login";
 
   return (
     <nav className="bg-white border-b border-gray-200 shadow-sm">
@@ -28,12 +30,14 @@ export function Navbar() {
 
           {/* Center nav links */}
           <div className="flex items-center gap-6">
-            <Link
-              href="/products"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              {t("products")}
-            </Link>
+            {!isLoginPage && (
+              <Link
+                href="/products"
+                className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                {t("products")}
+              </Link>
+            )}
             {!isLoading && role === "Admin" && (
               <Link
                 href="/admin"

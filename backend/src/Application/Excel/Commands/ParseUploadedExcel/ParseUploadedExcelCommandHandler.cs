@@ -63,7 +63,6 @@ public class ParseUploadedExcelCommandHandler : IRequestHandler<ParseUploadedExc
                 row.LastRequestCurrency = product.LastRequestCurrency;
                 row.LastRequestDate = product.LastRequestDate;
                 row.HasPreviousPrice = product.LastRequestPrice.HasValue && product.LastRequestCurrency.HasValue;
-                row.BasePrice = product.BasePrice;
             }
         }
 
