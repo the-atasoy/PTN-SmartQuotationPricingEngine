@@ -114,7 +114,7 @@ export function ProductsClient() {
           <button
             onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
             disabled={!productsData.hasPreviousPage}
-            className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 hover:bg-gray-50"
+            className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 hover:bg-gray-50 cursor-pointer disabled:cursor-not-allowed"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -126,7 +126,7 @@ export function ProductsClient() {
           <button
             onClick={() => setCurrentPage((p) => Math.min(productsData.totalPages - 1, p + 1))}
             disabled={!productsData.hasNextPage}
-            className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 hover:bg-gray-50"
+            className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 hover:bg-gray-50 cursor-pointer disabled:cursor-not-allowed"
           >
             <ChevronRight className="w-5 h-5" />
           </button>

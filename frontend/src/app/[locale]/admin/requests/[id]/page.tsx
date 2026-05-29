@@ -119,7 +119,6 @@ export default function AdminRequestDetailPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      console.error("Failed to download excel", error);
       toast.error(tCommon("generic"));
     }
   };
@@ -280,7 +279,7 @@ export default function AdminRequestDetailPage() {
                 <button 
                   onClick={handleSubmitQuotation}
                   disabled={isSubmitting}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg shadow font-medium transition-colors disabled:opacity-50"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg shadow font-medium transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? tCommon("Loading") : t("SubmitQuotation")}
                 </button>
