@@ -62,7 +62,8 @@
     "UnauthorizedAdmin": "Bu sayfaya erişim yetkiniz yok. (Yönetici yetkisi gereklidir)",
     "Loading": "Yükleniyor...",
     "Previous": "Önceki",
-    "Next": "Sonraki"
+    "Next": "Sonraki",
+    "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin."
   },
   "AdminRequests": {
     "Title": "Teklif Talepleri",

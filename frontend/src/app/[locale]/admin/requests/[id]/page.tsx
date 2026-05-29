@@ -22,7 +22,7 @@ export default function AdminRequestDetailPage() {
   const [loading, setLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [parsedItems, setParsedItems] = useState<ParsedExcelResultDto[]>([]);
-  const [quotationItems, setQuotationItems] = useState<Record<string, { unitPrice: number; discount: number; lineTotal: number }>>({});
+  const [quotationItems, setQuotationItems] = useState<Record<string, { unitPrice: number; lineTotal: number }>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,16 +55,15 @@ export default function AdminRequestDetailPage() {
       const res = await excelApi.parseExcel(file, accessToken);
       if (res.data) {
         setParsedItems(res.data);
-        const initialPricing: Record<string, { unitPrice: number; discount: number; lineTotal: number }> = {};
-        res.data.forEach(item => {
+        const initialPricing: Record<string, { unitPrice: number; lineTotal: number }> = {};
+        res.data.forEach((item: any) => {
+          const unitPrice = item.unitPrice ?? item.lastRequestPrice ?? 0;
           initialPricing[item.productId] = {
-            unitPrice: item.lastRequestPrice || 0,
-            discount: 0,
-            lineTotal: (item.lastRequestPrice || 0) * item.quantity
+            unitPrice: unitPrice,
+            lineTotal: unitPrice * item.quantity
           };
         });
         setQuotationItems(initialPricing);
-        alert(t("ExcelParsedSuccess"));
       } else {
         alert(res.errors?.join(", ") || t("ExcelParseFailed"));
       }
@@ -80,40 +79,31 @@ export default function AdminRequestDetailPage() {
     const unitPrice = isNaN(num) ? 0 : num;
     
     setQuotationItems(prev => {
-      const discount = prev[productId]?.discount || 0;
-      const discountedPrice = unitPrice * (1 - (discount / 100));
       return {
         ...prev,
         [productId]: {
           unitPrice,
-          discount,
-          lineTotal: discountedPrice * quantity
+          lineTotal: unitPrice * quantity
         }
       };
     });
   };
 
-  const handleDiscountChange = (productId: string, quantity: number, val: string) => {
-    const num = parseFloat(val);
-    const discount = isNaN(num) ? 0 : num;
-    
-    setQuotationItems(prev => {
-      const unitPrice = prev[productId]?.unitPrice || 0;
-      const discountedPrice = unitPrice * (1 - (discount / 100));
-      return {
-        ...prev,
-        [productId]: {
-          unitPrice,
-          discount,
-          lineTotal: discountedPrice * quantity
-        }
-      };
-    });
-  };
-
-  const handleDownloadExcel = () => {
-    const url = requestsApi.downloadExcelUrl(requestId);
-    window.open(url, '_blank');
+  const handleDownloadExcel = async () => {
+    try {
+      const blob = await requestsApi.downloadExcel(requestId, accessToken);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Request_${request?.requestNo || requestId}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Failed to download excel", error);
+      alert(tCommon("generic"));
+    }
   };
 
   const handleSubmitQuotation = async () => {
@@ -132,7 +122,7 @@ export default function AdminRequestDetailPage() {
 
       payloadItems.push({
         productId: item.productId,
-        unitPrice: pricing.unitPrice * (1 - (pricing.discount / 100))
+        unitPrice: pricing.unitPrice
       });
     });
 
@@ -174,7 +164,7 @@ export default function AdminRequestDetailPage() {
         <h1 className="text-3xl font-bold text-slate-900">{t("RequestDetail")} - {request.requestNo}</h1>
         <button 
           onClick={handleDownloadExcel}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow-sm text-sm font-medium transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow-sm text-sm font-medium transition-colors cursor-pointer"
         >
           {t("DownloadOriginalExcel")}
         </button>
@@ -222,13 +212,12 @@ export default function AdminRequestDetailPage() {
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("Quantity")}</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("LastPrice")}</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("UnitPrice")}</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("Discount")} %</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("LineTotal")}</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-slate-200">
                     {parsedItems.map((item) => {
-                      const pricing = quotationItems[item.productId] || { unitPrice: 0, discount: 0, lineTotal: 0 };
+                      const pricing = quotationItems[item.productId] || { unitPrice: 0, lineTotal: 0 };
 
                       return (
                         <tr key={item.productId}>
@@ -256,14 +245,7 @@ export default function AdminRequestDetailPage() {
                               onChange={(e) => handlePriceChange(item.productId, item.quantity, e.target.value)}
                             />
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm">
-                            <input 
-                              type="number" 
-                              className="w-20 border border-slate-300 rounded px-2 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500" 
-                              value={pricing.discount || ''}
-                              onChange={(e) => handleDiscountChange(item.productId, item.quantity, e.target.value)}
-                            />
-                          </td>
+
                           <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">
                             {formatCurrency(pricing.lineTotal, request.currency)}
                           </td>

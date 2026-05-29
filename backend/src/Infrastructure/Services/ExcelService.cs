@@ -14,6 +14,7 @@ public class ExcelService : IExcelService
     public ExcelService(IStringLocalizer<SharedResource> localizer)
     {
         _localizer = localizer;
+        ExcelPackage.License.SetNonCommercialOrganization("SmartQuotation");
     }
 
     public byte[] GenerateQuotationRequestExcel(Request request)
@@ -27,9 +28,10 @@ public class ExcelService : IExcelService
         worksheet.Cells[1, 2].Value = _localizer["Excel_ProductId"];
         worksheet.Cells[1, 3].Value = _localizer["Excel_ProductName"];
         worksheet.Cells[1, 4].Value = _localizer["Excel_Quantity"];
+        worksheet.Cells[1, 5].Value = _localizer["Excel_UnitPrice"];
 
         // Make headers bold
-        using (var range = worksheet.Cells[1, 1, 1, 4])
+        using (var range = worksheet.Cells[1, 1, 1, 5])
         {
             range.Style.Font.Bold = true;
         }
@@ -43,6 +45,7 @@ public class ExcelService : IExcelService
             worksheet.Cells[row, 2].Value = item.ProductId.ToString();
             worksheet.Cells[row, 3].Value = item.Product.Name;
             worksheet.Cells[row, 4].Value = item.Quantity;
+            worksheet.Cells[row, 5].Value = item.Product.LastRequestPrice;
             row++;
         }
 
@@ -69,6 +72,7 @@ public class ExcelService : IExcelService
             var productIdStr = worksheet.Cells[row, 2].Text;
             var productName = worksheet.Cells[row, 3].Text;
             var quantityStr = worksheet.Cells[row, 4].Text;
+            var unitPriceStr = worksheet.Cells[row, 5].Text;
 
             if (string.IsNullOrWhiteSpace(productIdStr) || !Guid.TryParse(productIdStr, out var productId))
                 continue; // Invalid row
@@ -76,11 +80,16 @@ public class ExcelService : IExcelService
             if (string.IsNullOrWhiteSpace(quantityStr) || !int.TryParse(quantityStr, out var quantity))
                 continue; // Invalid row
 
+            decimal? unitPrice = null;
+            if (!string.IsNullOrWhiteSpace(unitPriceStr) && decimal.TryParse(unitPriceStr, out var parsedPrice))
+                unitPrice = parsedPrice;
+
             results.Add(new ParsedExcelResultDto
             {
                 ProductId = productId,
                 ProductName = productName,
-                Quantity = quantity
+                Quantity = quantity,
+                UnitPrice = unitPrice
             });
         }
 

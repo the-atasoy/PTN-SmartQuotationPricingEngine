@@ -63,7 +63,8 @@
     "UnauthorizedAdmin": "You do not have permission to access this page. (Admin role required)",
     "Loading": "Loading...",
     "Previous": "Previous",
-    "Next": "Next"
+    "Next": "Next",
+    "generic": "Something went wrong. Please try again."
   },
   "AdminRequests": {
     "Title": "Quotation Requests",

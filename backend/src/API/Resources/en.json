@@ -12,5 +12,6 @@
   "Excel_Category": "Category",
   "Excel_Quantity": "Quantity",
   "Excel_General": "General",
-  "Excel_SheetName": "Quotation Request"
+  "Excel_SheetName": "Quotation Request",
+  "Excel_UnitPrice": "Unit Price"
 }

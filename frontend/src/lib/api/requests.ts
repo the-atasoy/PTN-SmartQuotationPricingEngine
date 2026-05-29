@@ -107,6 +107,16 @@ export const requestsApi = {
     return res.json();
   },
 
-  downloadExcelUrl: (id: string) =>
-    `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5100'}/api/v1/requests/${id}/excel`,
+  downloadExcel: async (id: string, token: string | null = null) => {
+    const res = await fetch(`${getApiUrl(API_ENDPOINTS.REQUESTS.CREATE)}/${id}/excel`, {
+      method: 'GET',
+      headers: getHeaders(token)
+    });
+    if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Excel download failed:", res.status, errorText);
+        throw new Error('Failed to download excel');
+    }
+    return res.blob();
+  },
 };

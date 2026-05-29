@@ -1,5 +1,5 @@
-import { redirect } from "@/navigation";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  redirect("/products");
+export default function Home({ params }: { params: { locale: string } }) {
+  redirect(`/${params.locale}/products`);
 }

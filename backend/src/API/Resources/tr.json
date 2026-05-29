@@ -12,5 +12,6 @@
   "Excel_Category": "Kategori",
   "Excel_Quantity": "Miktar",
   "Excel_General": "Genel",
-  "Excel_SheetName": "Teklif Talebi"
+  "Excel_SheetName": "Teklif Talebi",
+  "Excel_UnitPrice": "Birim Fiyat"
 }
