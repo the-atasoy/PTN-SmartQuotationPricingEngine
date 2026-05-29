@@ -1,115 +1,132 @@
 # Smart Quotation & Pricing Engine
 
-Bu proje, donanım ürünleri (HMI, Led Panel, LCD) için geliştirilmiş bir teklif yönetim simülasyonudur. Sistem, kullanıcıların Next.js arayüzünden ürün seçip teklif almasını; yöneticilerin ise (Admin) bu talepleri bir Excel dosyası aracılığıyla fiyatlandırmasını ve müşteriye iletmesini sağlar. Teklif iletildiğinde, ürünlerin son fiyat ve tarih bilgileri otomatik olarak güncellenir ve tarihçe (history) olarak saklanır.
+*Read this in [Türkçe](README.tr.md)*
 
-## 🔗 GitHub Bağlantısı
+This project is a quotation management simulation developed for hardware products (HMI, Led Panel, LCD). The system allows users to select products and get quotations from a Next.js interface; while administrators (Admin) price these requests via an Excel file and send them to the customer. When a quotation is sent, the last price and date information of the products are automatically updated and stored as history.
+
+## 🔗 GitHub Link
 **Repository:** [https://github.com/the-atasoy/PTN-SmartQuotationPricingEngine](#)
 
 ---
 
-## 🚀 Kullanılan Teknolojiler
+## 🚀 Technologies Used
 
-- **Frontend:** Next.js (App Router), Tailwind CSS, TypeScript, `next-intl` (Çoklu dil desteği)
+- **Frontend:** Next.js (App Router), Tailwind CSS, TypeScript, `next-intl` (Multi-language support)
 - **Backend:** .NET 10, Entity Framework Core (Code-First), MediatR (CQRS Pattern)
-- **Veritabanı:** PostgreSQL 16
-- **Diğer Araçlar:** Docker & Docker Compose, Mailpit (Lokal SMTP Sunucusu), EPPlus (Excel İşlemleri)
+- **Database:** PostgreSQL 16
+- **Other Tools:** Docker & Docker Compose, Mailpit (Local SMTP Server), EPPlus (Excel Operations)
 
 ---
 
-## ⚙️ Kurulum Adımları ve Çalıştırma Komutları
+## ⚙️ Installation Steps and Run Commands
 
-Projeyi ayağa kaldırmanın en kolay yolu **Docker Compose** kullanmaktır.
+The easiest way to run the project is using **Docker Compose**.
 
-### Seçenek 1: Docker Compose ile (Önerilen)
+### Option 1: Using Docker Compose (Recommended)
 
-Sisteminizde Docker ve Docker Compose kurulu olmalıdır.
+Docker and Docker Compose must be installed on your system.
 
-1. Projenin kök dizininde bir terminal açın.
-2. Tüm servisleri (PostgreSQL, Mailpit, Backend API, Frontend) başlatmak için aşağıdaki komutu çalıştırın:
+1. Open a terminal in the root directory of the project.
+2. Run the following command to start all services (PostgreSQL, Mailpit, Backend API, Frontend):
    ```bash
    docker-compose up --build
    ```
-3. Uygulama ayağa kalktığında veritabanı migration'ları ve örnek veriler (Seed Data) **otomatik** olarak oluşturulacaktır.
+3. Once the application is up, database migrations and sample data (Seed Data) will be created **automatically**.
 
-**Erişim Adresleri:**
+**Access Addresses:**
 - **Frontend UI:** http://localhost:3000
 - **Backend API:** http://localhost:5100
 - **PostgreSQL:** localhost:5432
-- **Mailpit Web UI (Mailleri Görmek İçin):** http://localhost:8025
+- **Mailpit Web UI (To View Emails):** http://localhost:8025
 
-### Seçenek 2: Lokal Geliştirme Ortamında (Manuel) Çalıştırma
+### Option 2: Running in Local Development Environment (Manual)
 
-Eğer projeyi Docker olmadan, geliştirme ortamında ayağa kaldırmak isterseniz:
+If you want to run the project in a development environment without Docker:
 
-1. **Altyapı Servislerini Başlatın (Sadece DB ve Mail):**
+1. **Start Infrastructure Services (DB and Mail only):**
    ```bash
    docker-compose up postgres mailpit
    ```
-2. **Backend API'yi Başlatın:**
+2. **Start Backend API:**
    ```bash
    cd backend
    dotnet restore
    dotnet run --project src/API
    ```
-   *(Backend `http://localhost:5100` adresinde çalışacaktır. İlk çalışmada veritabanı tabloları ve örnek veriler otomatik atılır.)*
+   *(Backend will run at `http://localhost:5100`. Database tables and sample data are automatically populated on the first run.)*
 
-3. **Frontend'i Başlatın:**
+3. **Start Frontend:**
    ```bash
    cd frontend
    npm install
    npm run dev
    ```
-   *(Frontend `http://localhost:3000` adresinde çalışacaktır.)*
+   *(Frontend will run at `http://localhost:3000`.)*
 
-### 🔑 Varsayılan Kullanıcı Bilgileri (Seed Data)
+### 🔑 Default User Credentials (Seed Data)
 
-Veritabanı ayağa kalktığında otomatik olarak aşağıdaki kullanıcılar oluşturulur:
+The following users are created automatically when the database is initialized:
 
-| Rol | E-Posta | Şifre |
+| Role | Email | Password |
 |---|---|---|
 | **Admin** | admin@piton.com.tr | Admin123! |
 | **User** | user@piton.com.tr | User123! |
 
 ---
 
-## 🗄️ Veritabanı Yapısı (PostgreSQL)
+## 🗄️ Database Structure (PostgreSQL)
 
-Proje **Code-First** yaklaşımıyla geliştirilmiştir. Tablo ve kolon isimlendirmelerinde standartlara uyulmuş ve veritabanına `snake_case` formatında yansıtılmıştır. Tablolar arası ilişkiler Foreign Key (`FK`) kısıtlamaları ile güven altına alınmıştır.
+![DB ER Diagram](docs/images/db-er-diagram.png)
 
-Tüm tablolarda `id` (PK, UUID), `created_at`, `created_by`, `updated_at`, `updated_by` ve `is_deleted` kolonlarını içeren bir **BaseEntity** yapısı kullanılmıştır (Soft Delete mantığı geçerlidir).
+The project is developed using the **Code-First** approach. Table and column naming conventions are followed, and they are reflected in the database in `snake_case` format. Relationships between tables are secured with Foreign Key (`FK`) constraints.
 
-Ana tablolar ve görevleri şunlardır:
+A **BaseEntity** structure containing `id` (PK, UUID), `created_at`, `created_by`, `updated_at`, `updated_by`, and `is_deleted` columns is used in all tables (Soft Delete logic applies).
+
+Main tables and their roles are as follows:
 
 ### 1. `products`
-Donanım ürünlerinin (HMI, Led Panel, LCD) tanımlandığı tablodur.
-- **Kritik Kolonlar:** `last_request_price` (Son teklif edilen fiyat) ve `last_request_date` (Son teklif tarihi) burada tutulur. Teklif iletildiğinde sistem tarafından **anlık olarak güncellenir.**
-- **Kolonlar:** `id`, `name`, `base_price`, `last_request_price`, `last_request_currency`, `last_request_date`, `... (base alanlar)`
+The table where hardware products (HMI, Led Panel, LCD) are defined.
+- **Critical Columns:** `last_request_price` (Last quoted price) and `last_request_date` (Last quote date) are kept here. When a quotation is sent, it is **instantly updated** by the system.
+- **Columns:** `id`, `name`, `base_price`, `last_request_price`, `last_request_currency`, `last_request_date`, `... (base fields)`
 
 ### 2. `requests`
-Teklifin üst bilgilerinin (header) saklandığı tablodur.
-- **Kolonlar:** `id`, `request_no` (Örn: RQ-20250515-001), `customer_id` (FK), `total_amount`, `currency`, `status` (0: Beklemede, 1: Gönderildi, 2: İptal).
+The table where the header information of the quotation is stored.
+- **Columns:** `id`, `request_no` (e.g. RQ-20250515-001), `customer_id` (FK), `total_amount`, `currency`, `status` (0: Pending, 1: Sent, 2: Canceled).
 
 ### 3. `request_items`
-Teklife ait ürün satırlarının (line items) tutulduğu detay tablosudur. Her bir satır ilgili teklife (`request_id`) ve ürüne (`product_id`) bağlıdır.
-- **Kolonlar:** `id`, `request_id` (FK), `product_id` (FK), `quantity` (Miktar), `unit_price` (Birim Fiyat), `discount` (İndirim Tutarı), `line_total` (Satır Toplamı).
+The detail table where the product lines (line items) belonging to the quotation are kept. Each line is linked to the relevant quotation (`request_id`) and product (`product_id`).
+- **Columns:** `id`, `request_id` (FK), `product_id` (FK), `quantity` (Quantity), `unit_price` (Unit Price), `discount` (Discount Amount), `line_total` (Line Total).
 
 ### 4. `customers`
-Teklif verilen müşteri veya cari bilgilerin ürün ve taleplerden bağımsız olarak saklandığı tablodur.
-- **Kolonlar:** `id`, `name`, `email`, `phone`.
+The table where customer or account information given a quotation is stored independently of products and requests.
+- **Columns:** `id`, `name`, `email`, `phone`.
 
 ### 5. `product_price_histories`
-Ürünlerin geçmiş teklif hareketlerini ve fiyat değişimlerini loglamak (izlemek) için kullanılır. Teklif gönderildiği anda tetiklenerek bu tabloya yeni bir kayıt atılır.
-- **Kolonlar:** `id`, `product_id` (FK), `request_id` (FK), `price` (O anki birim fiyat), `currency`.
+Used to log (track) past quotation movements and price changes of products. It is triggered the moment the quotation is sent, and a new record is inserted into this table.
+- **Columns:** `id`, `product_id` (FK), `request_id` (FK), `price` (Unit price at that moment), `currency`.
 
 ### 6. `users`
-Sisteme giriş yapan yetkili (Admin) ve normal (User) kullanıcıların saklandığı tablodur. Şifreler BCrypt algoritması ile hash'lenerek tutulur.
-- **Kolonlar:** `id`, `email`, `password_hash`, `role`.
+The table where authorized (Admin) and normal (User) users who log in to the system are stored. Passwords are kept hashed with the BCrypt algorithm.
+- **Columns:** `id`, `email`, `password_hash`, `role`.
+
+### 🔍 Database Indexes
+To improve performance and ensure data integrity, the following indexes are created in the database:
+- **`requests`:**
+  - `request_no` (Unique Index, with `is_deleted = false` filter)
+  - `status` (For fast filtering by status)
+  - `created_at` (For sorting and date-based queries)
+- **`customers`:**
+  - `email` (Unique Index, with `is_deleted = false` filter)
+- **`users`:**
+  - `email` (Unique Index, with `is_deleted = false` filter)
+- **`product_price_histories`:**
+  - `product_id` and `created_at` (Composite Index - to quickly list the price history of the product)
 
 ---
 
-## 🔄 CI/CD Akışı
+## 🔄 CI/CD Flow
 
-Projede GitHub Actions kullanılarak Frontend ve Backend için ayrı CI workflow'ları hazırlanmıştır. `.github/workflows/` dizini altındaki dosyalar sayesinde her push işleminde:
-1. Docker imajları derlenir.
-2. (Frontend için) Lint kontrolleri ve prod build işlemleri konteyner içerisinde doğrulanır.
-3. Mimari yapının (prod vs dev) stabilitesi güvence altına alınır.
+Separate CI workflows are prepared for Frontend and Backend using GitHub Actions. Thanks to the files under the `.github/workflows/` directory, on every push:
+1. Docker images are built.
+2. (For Frontend) Lint checks and prod build operations are verified inside the container.
+3. The stability of the architectural structure (prod vs dev) is ensured.
