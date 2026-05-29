@@ -38,6 +38,22 @@ export default function AdminRequestDetailPage() {
       const res = await requestsApi.getById(requestId, accessToken);
       if (res.data) {
         setRequest(res.data);
+        if (res.data.status === 0 && parsedItems.length === 0) {
+          const initialParsed = res.data.items.map(i => ({
+            requestNo: res.data.requestNo,
+            productId: i.productId,
+            productName: i.productName,
+            quantity: i.quantity,
+            hasPreviousPrice: false
+          }));
+          setParsedItems(initialParsed);
+          
+          const initialPricing: Record<string, { unitPrice: number; lineTotal: number }> = {};
+          initialParsed.forEach(item => {
+            initialPricing[item.productId] = { unitPrice: 0, lineTotal: 0 };
+          });
+          setQuotationItems(initialPricing);
+        }
       }
     } catch (error) {
       console.error("Failed to fetch request detail", error);
@@ -52,7 +68,7 @@ export default function AdminRequestDetailPage() {
 
     try {
       setIsUploading(true);
-      const res = await excelApi.parseExcel(file, accessToken);
+      const res = await excelApi.parseExcel(file, requestId, accessToken);
       if (res.data) {
         setParsedItems(res.data);
         const initialPricing: Record<string, { unitPrice: number; lineTotal: number }> = {};
@@ -69,6 +85,7 @@ export default function AdminRequestDetailPage() {
       }
     } catch (error: any) {
       alert(error.message || t("ExcelParseFailed"));
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } finally {
       setIsUploading(false);
     }

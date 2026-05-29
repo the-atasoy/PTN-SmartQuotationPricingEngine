@@ -18,7 +18,7 @@ public class ExcelController : ControllerBase
 
     [HttpPost("parse")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> ParseExcel(IFormFile file)
+    public async Task<IActionResult> ParseExcel(IFormFile file, [FromForm] Guid requestId)
     {
         if (file.Length == 0)
         {
@@ -31,7 +31,7 @@ public class ExcelController : ControllerBase
         }
 
         using var stream = file.OpenReadStream();
-        var command = new ParseUploadedExcelCommand { ExcelStream = stream };
+        var command = new ParseUploadedExcelCommand { ExcelStream = stream, RequestId = requestId };
         var result = await _mediator.Send(command);
 
         if (!result.IsSuccessful)

@@ -69,6 +69,7 @@ public class ExcelService : IExcelService
 
         for (int row = 2; row <= rowCount; row++) // Skip header
         {
+            var requestNoStr = worksheet.Cells[row, 1].Text;
             var productIdStr = worksheet.Cells[row, 2].Text;
             var productName = worksheet.Cells[row, 3].Text;
             var quantityStr = worksheet.Cells[row, 4].Text;
@@ -86,6 +87,7 @@ public class ExcelService : IExcelService
 
             results.Add(new ParsedExcelResultDto
             {
+                RequestNo = requestNoStr,
                 ProductId = productId,
                 ProductName = productName,
                 Quantity = quantity,

@@ -97,7 +97,9 @@
     "FinalQuotation": "Nihai Teklif",
     "ExcelParsedSuccess": "Excel dosyası başarıyla ayrıştırıldı",
     "ExcelParseFailed": "Excel dosyası ayrıştırılamadı",
-    "QuotationSent": "Teklif başarıyla gönderildi"
+    "QuotationSent": "Teklif başarıyla gönderildi",
+    "RequestedItems": "Talep Edilen Ürünler",
+    "InvalidExcelFile": "Yüklenen Excel dosyası bu talebe ait değil."
   },
   "AdminProducts": {
     "PriceHistoryTitle": "Ürün Fiyat Geçmişi",

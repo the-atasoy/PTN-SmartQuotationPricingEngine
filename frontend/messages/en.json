@@ -98,7 +98,9 @@
     "FinalQuotation": "Final Quotation",
     "ExcelParsedSuccess": "Excel file parsed successfully",
     "ExcelParseFailed": "Failed to parse Excel file",
-    "QuotationSent": "Quotation sent successfully"
+    "QuotationSent": "Quotation sent successfully",
+    "RequestedItems": "Requested Items",
+    "InvalidExcelFile": "Uploaded Excel file does not belong to this request."
   },
   "AdminProducts": {
     "PriceHistoryTitle": "Product Price History",
