@@ -20,6 +20,10 @@ public class CustomerConfiguration : BaseEntityConfiguration<Customer>
             .HasMaxLength(255)
             .IsRequired();
 
+        builder.HasIndex(c => c.Email)
+            .IsUnique()
+            .HasFilter("is_deleted = false");
+
         builder.Property(c => c.Phone)
             .HasColumnName("phone")
             .HasMaxLength(50);
