@@ -3,15 +3,20 @@ using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+using Application.Resources;
+using Microsoft.Extensions.Localization;
+
 namespace Application.Requests.Queries.GetRequestById;
 
 public class GetRequestByIdQueryHandler : IRequestHandler<GetRequestByIdQuery, ApiResponse<RequestDetailDto>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public GetRequestByIdQueryHandler(IApplicationDbContext context)
+    public GetRequestByIdQueryHandler(IApplicationDbContext context, IStringLocalizer<SharedResource> localizer)
     {
         _context = context;
+        _localizer = localizer;
     }
 
     public async Task<ApiResponse<RequestDetailDto>> Handle(GetRequestByIdQuery request, CancellationToken cancellationToken)
@@ -24,7 +29,7 @@ public class GetRequestByIdQueryHandler : IRequestHandler<GetRequestByIdQuery, A
 
         if (entity == null)
         {
-            return ApiResponse<RequestDetailDto>.Fail("Request not found", 404);
+            return ApiResponse<RequestDetailDto>.Fail(_localizer["RequestNotFound"].Value, 404);
         }
 
         var dto = new RequestDetailDto

@@ -1,29 +1,32 @@
 using FluentValidation;
 
+using Application.Resources;
+using Microsoft.Extensions.Localization;
+
 namespace Application.Requests.Commands.SendQuotation;
 
 public class SendQuotationCommandValidator : AbstractValidator<SendQuotationCommand>
 {
-    public SendQuotationCommandValidator()
+    public SendQuotationCommandValidator(IStringLocalizer<SharedResource> localizer)
     {
         RuleFor(v => v.RequestId)
-            .NotEmpty().WithMessage("RequestId is required.");
+            .NotEmpty().WithMessage(localizer["RequestIdRequired"].Value);
 
         RuleFor(v => v.Items)
-            .NotEmpty().WithMessage("At least one item must be provided.");
+            .NotEmpty().WithMessage(localizer["AtLeastOneItem"].Value);
 
-        RuleForEach(v => v.Items).SetValidator(new SendQuotationItemDtoValidator());
+        RuleForEach(v => v.Items).SetValidator(new SendQuotationItemDtoValidator(localizer));
     }
 }
 
 public class SendQuotationItemDtoValidator : AbstractValidator<SendQuotationItemDto>
 {
-    public SendQuotationItemDtoValidator()
+    public SendQuotationItemDtoValidator(IStringLocalizer<SharedResource> localizer)
     {
         RuleFor(v => v.ProductId)
-            .NotEmpty().WithMessage("ProductId is required.");
+            .NotEmpty().WithMessage(localizer["ProductIdRequired"].Value);
 
         RuleFor(v => v.UnitPrice)
-            .GreaterThan(0).WithMessage("Unit price must be greater than zero.");
+            .GreaterThan(0).WithMessage(localizer["UnitPricePositive"].Value);
     }
 }

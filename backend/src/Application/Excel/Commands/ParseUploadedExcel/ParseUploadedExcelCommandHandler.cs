@@ -3,17 +3,22 @@ using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+using Application.Resources;
+using Microsoft.Extensions.Localization;
+
 namespace Application.Excel.Commands.ParseUploadedExcel;
 
 public class ParseUploadedExcelCommandHandler : IRequestHandler<ParseUploadedExcelCommand, ApiResponse<List<ParsedExcelResultDto>>>
 {
     private readonly IExcelService _excelService;
     private readonly IApplicationDbContext _context;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public ParseUploadedExcelCommandHandler(IExcelService excelService, IApplicationDbContext context)
+    public ParseUploadedExcelCommandHandler(IExcelService excelService, IApplicationDbContext context, IStringLocalizer<SharedResource> localizer)
     {
         _excelService = excelService;
         _context = context;
+        _localizer = localizer;
     }
 
     public async Task<ApiResponse<List<ParsedExcelResultDto>>> Handle(ParseUploadedExcelCommand request, CancellationToken cancellationToken)
@@ -25,23 +30,23 @@ public class ParseUploadedExcelCommandHandler : IRequestHandler<ParseUploadedExc
         }
         catch (Exception ex)
         {
-            return ApiResponse<List<ParsedExcelResultDto>>.Fail($"Failed to parse Excel file: {ex.Message}", 400);
+            return ApiResponse<List<ParsedExcelResultDto>>.Fail(_localizer["ExcelParseFailed", ex.Message].Value, 400);
         }
 
         if (!parsedRows.Any())
         {
-            return ApiResponse<List<ParsedExcelResultDto>>.Fail("Excel file is empty or missing required columns.", 422);
+            return ApiResponse<List<ParsedExcelResultDto>>.Fail(_localizer["ExcelEmpty"].Value, 422);
         }
 
         var req = await _context.Requests.FirstOrDefaultAsync(r => r.Id == request.RequestId, cancellationToken);
         if (req == null)
         {
-            return ApiResponse<List<ParsedExcelResultDto>>.Fail("Request not found", 404);
+            return ApiResponse<List<ParsedExcelResultDto>>.Fail(_localizer["RequestNotFound"].Value, 404);
         }
 
         if (parsedRows.Any(r => r.RequestNo != req.RequestNo))
         {
-            return ApiResponse<List<ParsedExcelResultDto>>.Fail("Uploaded Excel file does not belong to this request.", 400);
+            return ApiResponse<List<ParsedExcelResultDto>>.Fail(_localizer["ExcelNotBelongToRequest"].Value, 400);
         }
 
         var productIds = parsedRows.Select(r => r.ProductId).Distinct().ToList();

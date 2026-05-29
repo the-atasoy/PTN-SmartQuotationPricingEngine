@@ -4,13 +4,13 @@ namespace Application.Requests.Queries.GetAllRequests;
 
 public class RequestListItemDto
 {
-    public Guid Id { get; set; }
-    public string RequestNo { get; set; } = default!;
-    public string CustomerName { get; set; } = default!;
-    public string CustomerEmail { get; set; } = default!;
-    public decimal TotalAmount { get; set; }
-    public Currency Currency { get; set; }
-    public RequestStatus Status { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? LastModified { get; set; }
+    public Guid Id { get; init; }
+    public string RequestNo { get; init; } = default!;
+    public string CustomerName { get; init; } = default!;
+    public string CustomerEmail { get; init; } = default!;
+    public decimal TotalAmount { get; init; }
+    public Currency Currency { get; init; }
+    public RequestStatus Status { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime? LastModified { get; init; }
 }

@@ -3,7 +3,4 @@ using MediatR;
 
 namespace Application.Requests.Queries.GetRequestById;
 
-public class GetRequestByIdQuery : IRequest<ApiResponse<RequestDetailDto>>
-{
-    public Guid Id { get; set; }
-}
+public record GetRequestByIdQuery(Guid Id) : IRequest<ApiResponse<RequestDetailDto>>;

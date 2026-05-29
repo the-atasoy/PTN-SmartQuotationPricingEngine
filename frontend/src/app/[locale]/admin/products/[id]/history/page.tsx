@@ -3,19 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { getApiUrl } from "@/lib/api-endpoints";
 import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
-
-interface PriceHistoryDto {
-  id: string;
-  requestId: string;
-  requestNo: string;
-  customerName: string;
-  price: number;
-  currency: number;
-  createdAt: string;
-}
+import { productsApi } from "@/lib/api/products";
+import { PriceHistoryDto } from "@/lib/types/api";
+import { Pagination } from "@/components/common/Pagination";
 
 export default function ProductPriceHistoryPage() {
   const { accessToken } = useAuth();
@@ -34,30 +26,11 @@ export default function ProductPriceHistoryPage() {
     async (pageIndex: number) => {
       try {
         setLoading(true);
-        const res = await fetch(
-          `${getApiUrl("/api/v1/products")}/${productId}/price-history?page=${pageIndex}&pageSize=${pageSize}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              ...(accessToken
-                ? { Authorization: `Bearer ${accessToken}` }
-                : {}),
-            },
-          },
-        );
+        const res = await productsApi.getPriceHistory(productId, pageIndex, pageSize, accessToken);
 
-        if (!res.ok) throw new Error("Failed to fetch price history");
-
-        const data = (await res.json()) as {
-          data: {
-            items: PriceHistoryDto[];
-            totalCount: number;
-            totalPages: number;
-          };
-        };
-        if (data?.data) {
-          setHistory(data.data.items);
-          setTotalPages(data.data.totalPages);
+        if (res.isSuccessful) {
+          setHistory(res.data.items);
+          setTotalPages(res.data.totalPages);
         }
       } catch (error) {
         console.error("Failed to fetch price history", error);
@@ -136,27 +109,13 @@ export default function ProductPriceHistoryPage() {
       </div>
 
       {totalPages > 1 && (
-        <div className="mt-6 flex justify-center space-x-2">
-          <button
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page === 0}
-            className="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-50"
-          >
-            {tCommon("Previous")}
-          </button>
-          <div className="flex items-center px-4">
-            <span className="text-sm text-slate-700">
-              {page + 1} / {totalPages}
-            </span>
-          </div>
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={page >= totalPages - 1}
-            className="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-50"
-          >
-            {tCommon("Next")}
-          </button>
-        </div>
+        <Pagination
+          page={page + 1}
+          totalPages={totalPages}
+          hasNextPage={page < totalPages - 1}
+          hasPreviousPage={page > 0}
+          onPageChange={(newPage) => setPage(newPage - 1)}
+        />
       )}
     </div>
   );

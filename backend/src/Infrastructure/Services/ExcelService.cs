@@ -30,10 +30,10 @@ public class ExcelService : IExcelService
         worksheet.Cells[1, 3].Value = _localizer["Excel_ProductName"];
         worksheet.Cells[1, 4].Value = _localizer["Excel_Quantity"];
         worksheet.Cells[1, 5].Value = _localizer["Excel_UnitPrice"];
-        worksheet.Cells[1, 6].Value = "Discount (Per Unit)";
-        worksheet.Cells[1, 7].Value = "Discount % (Per Unit)";
-        worksheet.Cells[1, 8].Value = "Line Total";
-        worksheet.Cells[1, 9].Value = "Currency";
+        worksheet.Cells[1, 6].Value = _localizer["Excel_Discount"].Value;
+        worksheet.Cells[1, 7].Value = _localizer["Excel_DiscountPercent"].Value;
+        worksheet.Cells[1, 8].Value = _localizer["Excel_LineTotal"].Value;
+        worksheet.Cells[1, 9].Value = _localizer["Excel_Currency"].Value;
 
         // Make headers bold and colorful
         using (var range = worksheet.Cells[1, 1, 1, 9])
@@ -109,7 +109,7 @@ public class ExcelService : IExcelService
             totalRange.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(41, 128, 185)); // Belize Hole (Blue)
         }
 
-        worksheet.Cells[row, 3].Value = "TOTALS";
+        worksheet.Cells[row, 3].Value = _localizer["Excel_Totals"].Value;
 
         worksheet.Cells[row, 6].Formula = $"SUMPRODUCT(D2:D{lastDataRow}, F2:F{lastDataRow})";
         worksheet.Cells[row, 6].Style.Numberformat.Format = "#,##0.00";

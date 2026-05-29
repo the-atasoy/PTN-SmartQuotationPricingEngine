@@ -1,16 +1,19 @@
 using FluentValidation;
 
+using Application.Resources;
+using Microsoft.Extensions.Localization;
+
 namespace Application.Features.Auth.Commands;
 
 public class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
-    public LoginCommandValidator()
+    public LoginCommandValidator(IStringLocalizer<SharedResource> localizer)
     {
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email is required.")
-            .EmailAddress().WithMessage("Email is not valid.");
+            .NotEmpty().WithMessage(localizer["EmailRequired"].Value)
+            .EmailAddress().WithMessage(localizer["EmailNotValid"].Value);
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Password is required.");
+            .NotEmpty().WithMessage(localizer["PasswordRequired"].Value);
     }
 }

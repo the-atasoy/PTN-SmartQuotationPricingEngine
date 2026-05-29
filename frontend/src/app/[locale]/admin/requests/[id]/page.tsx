@@ -51,6 +51,8 @@ export default function AdminRequestDetailPage() {
             lastRequestPrice: i.lastRequestPrice,
             lastRequestCurrency: i.lastRequestCurrency,
             lastRequestDate: i.lastRequestDate,
+            discount: 0,
+            unitPrice: i.lastRequestCurrency === requestCurrency ? (i.lastRequestPrice ?? 0) : 0,
           }));
           setParsedItems(initialParsed);
 

@@ -5,10 +5,13 @@ export const API_ENDPOINTS = {
     REFRESH: "/api/v1/auth/refresh",
   },
   PRODUCTS: {
-    GET_ALL: "/api/v1/products",
+    BASE: "/api/v1/products",
   },
   REQUESTS: {
-    CREATE: "/api/v1/requests",
+    BASE: "/api/v1/requests",
+  },
+  EXCEL: {
+    BASE: "/api/v1/excel",
   }
 };
 

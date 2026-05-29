@@ -1,13 +1,6 @@
-
-
-export interface CreateRequestInput {
-  customerId: string;
-  currency: number;
-  items: {
-    productId: string;
-    quantity: number;
-  }[];
-}
+import { getApiUrl, API_ENDPOINTS } from '../api-endpoints';
+import { getHeaders } from './api-client';
+import { PaginatedResult, ApiResponse } from '../types/api';
 
 export interface RequestListItemDto {
   id: string;
@@ -57,28 +50,10 @@ export interface SendQuotationInput {
   }[];
 }
 
-import { getApiUrl, API_ENDPOINTS } from '../api-endpoints';
-
-const getHeaders = (token: string | null) => {
-  return {
-    'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-  };
-};
-
 export const requestsApi = {
-  createRequest: async (data: CreateRequestInput, token: string | null) => {
-    const res = await fetch(getApiUrl(API_ENDPOINTS.REQUESTS.CREATE), {
-      method: 'POST',
-      headers: getHeaders(token),
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Failed to create request');
-    return res.json();
-  },
 
   getAll: async (page: number = 0, pageSize: number = 10, token: string | null = null) => {
-    const res = await fetch(`${getApiUrl(API_ENDPOINTS.REQUESTS.CREATE)}?page=${page}&pageSize=${pageSize}`, {
+    const res = await fetch(`${getApiUrl(API_ENDPOINTS.REQUESTS.BASE)}?page=${page}&pageSize=${pageSize}`, {
       method: 'GET',
       headers: getHeaders(token)
     });
@@ -87,20 +62,20 @@ export const requestsApi = {
       console.error(`Failed to fetch requests. Status: ${res.status}, Body: ${errText}`);
       throw new Error(`Failed to fetch requests: ${res.status} ${errText}`);
     }
-    return res.json() as Promise<{ data: { items: RequestListItemDto[], totalCount: number, totalPages: number, page: number, pageSize: number, hasNextPage: boolean, hasPreviousPage: boolean } }>;
+    return res.json() as Promise<ApiResponse<PaginatedResult<RequestListItemDto>>>;
   },
 
   getById: async (id: string, token: string | null = null) => {
-    const res = await fetch(`${getApiUrl(API_ENDPOINTS.REQUESTS.CREATE)}/${id}`, {
+    const res = await fetch(`${getApiUrl(API_ENDPOINTS.REQUESTS.BASE)}/${id}`, {
       method: 'GET',
       headers: getHeaders(token)
     });
     if (!res.ok) throw new Error('Failed to fetch request details');
-    return res.json() as Promise<{ data: RequestDetailDto }>;
+    return res.json() as Promise<ApiResponse<RequestDetailDto>>;
   },
 
   sendQuotation: async (id: string, data: SendQuotationInput, token: string | null = null) => {
-    const res = await fetch(`${getApiUrl(API_ENDPOINTS.REQUESTS.CREATE)}/${id}/send`, {
+    const res = await fetch(`${getApiUrl(API_ENDPOINTS.REQUESTS.BASE)}/${id}/send`, {
       method: 'PUT',
       headers: getHeaders(token),
       body: JSON.stringify(data)
@@ -113,7 +88,7 @@ export const requestsApi = {
   },
 
   downloadExcel: async (id: string, token: string | null = null) => {
-    const res = await fetch(`${getApiUrl(API_ENDPOINTS.REQUESTS.CREATE)}/${id}/excel`, {
+    const res = await fetch(`${getApiUrl(API_ENDPOINTS.REQUESTS.BASE)}/${id}/excel`, {
       method: 'GET',
       headers: getHeaders(token)
     });

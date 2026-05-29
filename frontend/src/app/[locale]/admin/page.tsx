@@ -6,6 +6,7 @@ import { requestsApi, RequestListItemDto } from "@/lib/api/requests";
 import { useRouter, useParams } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
+import { Pagination } from "@/components/common/Pagination";
 
 export default function AdminRequestsPage() {
   const { role, accessToken, isLoading: authLoading } = useAuth();
@@ -156,27 +157,13 @@ export default function AdminRequestsPage() {
       </div>
 
       {totalPages > 1 && (
-        <div className="mt-6 flex justify-center space-x-2">
-          <button
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page === 0}
-            className="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-50"
-          >
-            {tCommon("Previous")}
-          </button>
-          <div className="flex items-center px-4">
-            <span className="text-sm text-slate-700">
-              {page + 1} / {totalPages}
-            </span>
-          </div>
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={page >= totalPages - 1}
-            className="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-50"
-          >
-            {tCommon("Next")}
-          </button>
-        </div>
+        <Pagination
+          page={page + 1}
+          totalPages={totalPages}
+          hasNextPage={page < totalPages - 1}
+          hasPreviousPage={page > 0}
+          onPageChange={(newPage) => setPage(newPage - 1)}
+        />
       )}
     </div>
   );

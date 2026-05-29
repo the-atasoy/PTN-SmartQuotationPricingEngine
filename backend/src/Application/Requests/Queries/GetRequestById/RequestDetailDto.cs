@@ -4,30 +4,30 @@ namespace Application.Requests.Queries.GetRequestById;
 
 public class RequestItemDetailDto
 {
-    public Guid Id { get; set; }
-    public Guid ProductId { get; set; }
-    public string ProductName { get; set; } = default!;
-    public int Quantity { get; set; }
-    public decimal UnitPrice { get; set; }
-    public decimal LineTotal { get; set; }
-    public decimal Discount { get; set; }
-    public decimal? LastRequestPrice { get; set; }
-    public Currency? LastRequestCurrency { get; set; }
-    public DateTime? LastRequestDate { get; set; }
+    public Guid Id { get; init; }
+    public Guid ProductId { get; init; }
+    public string ProductName { get; init; } = default!;
+    public int Quantity { get; init; }
+    public decimal UnitPrice { get; init; }
+    public decimal LineTotal { get; init; }
+    public decimal Discount { get; init; }
+    public decimal? LastRequestPrice { get; init; }
+    public Currency? LastRequestCurrency { get; init; }
+    public DateTime? LastRequestDate { get; init; }
 }
 
 public class RequestDetailDto
 {
-    public Guid Id { get; set; }
-    public string RequestNo { get; set; } = default!;
-    public Guid CustomerId { get; set; }
-    public string CustomerName { get; set; } = default!;
-    public string CustomerEmail { get; set; } = default!;
-    public decimal TotalAmount { get; set; }
-    public Currency Currency { get; set; }
-    public RequestStatus Status { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? LastModified { get; set; }
+    public Guid Id { get; init; }
+    public string RequestNo { get; init; } = default!;
+    public Guid CustomerId { get; init; }
+    public string CustomerName { get; init; } = default!;
+    public string CustomerEmail { get; init; } = default!;
+    public decimal TotalAmount { get; init; }
+    public Currency Currency { get; init; }
+    public RequestStatus Status { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public DateTime? LastModified { get; init; }
     
-    public List<RequestItemDetailDto> Items { get; set; } = new();
+    public List<RequestItemDetailDto> Items { get; init; } = new();
 }

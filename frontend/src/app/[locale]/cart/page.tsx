@@ -6,9 +6,6 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { Trash2, Plus, Minus, Loader2 } from "lucide-react";
 import { Link } from "@/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { requestQuoteSchema, RequestQuoteFormData } from "@/lib/validations/cart";
 import { toast } from "sonner";
 import { getApiUrl, API_ENDPOINTS } from "@/lib/api-endpoints";
 import { Currency } from "@/lib/enums";
@@ -21,18 +18,10 @@ export default function CartPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState(Currency.TRY);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RequestQuoteFormData>({
-    resolver: zodResolver(requestQuoteSchema),
-    defaultValues: {}
-  });
-
-  const onSubmit = async (data: RequestQuoteFormData) => {
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!email) {
-      toast.error("Please login to request a quotation.");
+      toast.error(t("loginRequired") || "Please login to request a quotation.");
       return;
     }
 
@@ -48,7 +37,7 @@ export default function CartPage() {
         }))
       };
 
-      const res = await fetch(getApiUrl(API_ENDPOINTS.REQUESTS.CREATE), {
+      const res = await fetch(getApiUrl(API_ENDPOINTS.REQUESTS.BASE), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +59,7 @@ export default function CartPage() {
         }
       }
     } catch (error) {
-      toast.error("An unexpected error occurred.");
+      toast.error(t("unexpectedError") || "An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);
     }
@@ -147,7 +136,7 @@ export default function CartPage() {
           <div className="bg-white shadow-sm rounded-xl border border-gray-200 p-6 sticky top-20">
             <h2 className="text-lg font-medium text-gray-900 mb-6">{t("requestQuote")}</h2>
             
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={onSubmit} className="space-y-5">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
                   Email

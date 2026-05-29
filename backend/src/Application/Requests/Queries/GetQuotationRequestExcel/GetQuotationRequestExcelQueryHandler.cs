@@ -3,17 +3,22 @@ using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+using Application.Resources;
+using Microsoft.Extensions.Localization;
+
 namespace Application.Requests.Queries.GetQuotationRequestExcel;
 
 public class GetQuotationRequestExcelQueryHandler : IRequestHandler<GetQuotationRequestExcelQuery, ApiResponse<byte[]>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IExcelService _excelService;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public GetQuotationRequestExcelQueryHandler(IApplicationDbContext context, IExcelService excelService)
+    public GetQuotationRequestExcelQueryHandler(IApplicationDbContext context, IExcelService excelService, IStringLocalizer<SharedResource> localizer)
     {
         _context = context;
         _excelService = excelService;
+        _localizer = localizer;
     }
 
     public async Task<ApiResponse<byte[]>> Handle(GetQuotationRequestExcelQuery request, CancellationToken cancellationToken)
@@ -24,7 +29,7 @@ public class GetQuotationRequestExcelQueryHandler : IRequestHandler<GetQuotation
             .FirstOrDefaultAsync(r => r.Id == request.RequestId, cancellationToken);
 
         if (entity == null)
-            return ApiResponse<byte[]>.Fail("Request not found.", 404);
+            return ApiResponse<byte[]>.Fail(_localizer["RequestNotFound"].Value, 404);
 
         try
         {
@@ -33,7 +38,7 @@ public class GetQuotationRequestExcelQueryHandler : IRequestHandler<GetQuotation
         }
         catch (Exception ex)
         {
-            return ApiResponse<byte[]>.Fail($"Failed to generate Excel: {ex.Message}", 500);
+            return ApiResponse<byte[]>.Fail(_localizer["ExcelGenerateFailed", ex.Message].Value, 500);
         }
     }
 }

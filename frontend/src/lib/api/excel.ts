@@ -1,3 +1,6 @@
+import { getApiUrl, API_ENDPOINTS } from '../api-endpoints';
+import { ApiResponse } from '../types/api';
+
 export interface ParsedExcelResultDto {
   requestNo: string;
   productId: string;
@@ -7,6 +10,8 @@ export interface ParsedExcelResultDto {
   lastRequestCurrency?: number;
   lastRequestDate?: string;
   hasPreviousPrice: boolean;
+  unitPrice?: number;
+  discount: number;
 }
 
 export const excelApi = {
@@ -20,7 +25,7 @@ export const excelApi = {
     formData.append("requestId", requestId);
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5100"}/api/v1/excel/parse`,
+      `${getApiUrl(API_ENDPOINTS.EXCEL.BASE)}/parse`,
       {
         method: "POST",
         headers: {
@@ -38,10 +43,6 @@ export const excelApi = {
       throw new Error(`Failed to parse Excel: ${res.statusText}`);
     }
 
-    return res.json() as Promise<{
-      data: ParsedExcelResultDto[];
-      isSuccessful: boolean;
-      errors?: string[];
-    }>;
+    return res.json() as Promise<ApiResponse<ParsedExcelResultDto[]>>;
   },
 };

@@ -19,7 +19,7 @@ public class GetAllRequestsQueryHandler : IRequestHandler<GetAllRequestsQuery, A
     {
         var query = _context.Requests
             .Include(r => r.Customer)
-            .AsQueryable();
+            .AsNoTracking();
 
         var totalCount = await query.CountAsync(cancellationToken);
 
