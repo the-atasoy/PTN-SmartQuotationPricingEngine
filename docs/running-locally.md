@@ -21,7 +21,7 @@ This starts:
 | Service | URL |
 |---|---|
 | Frontend | http://localhost:3000 |
-| Backend API | http://localhost:5000 |
+| Backend API | http://localhost:5100 |
 | PostgreSQL | localhost:5432 |
 | Mailpit SMTP | localhost:1025 |
 | Mailpit Web UI | http://localhost:8025 |
@@ -65,7 +65,7 @@ dotnet build
 dotnet run --project src/API
 ```
 
-Backend runs at `http://localhost:5000`. Migrations and seed data are applied automatically on startup.
+Backend runs at `http://localhost:5100`. Migrations and seed data are applied automatically on startup.
 
 ### 3. Run Frontend
 
@@ -91,7 +91,7 @@ Email__SmtpPort=1025
 
 #### Frontend (`.env.local`)
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5000
+NEXT_PUBLIC_API_URL=http://localhost:5100
 NEXT_PUBLIC_DEFAULT_LOCALE=tr
 ```
 
