@@ -1,28 +1,9 @@
 /**
- * Formats a numeric amount as currency based on the enum mapped integer.
- * 0 -> TRY
- * 1 -> USD
- * 2 -> EUR
+ * Formats a numeric amount as TRY currency.
  */
-export function formatCurrency(amount: number, currency: number, locale?: string): string {
-  let currencyCode = 'USD';
-
-  switch (currency) {
-    case 0:
-      currencyCode = 'TRY';
-      break;
-    case 1:
-      currencyCode = 'USD';
-      break;
-    case 2:
-      currencyCode = 'EUR';
-      break;
-    default:
-      currencyCode = 'USD';
-  }
-
+export function formatPrice(amount: number, locale?: string): string {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency: currencyCode,
+    currency: 'TRY',
   }).format(amount);
 }

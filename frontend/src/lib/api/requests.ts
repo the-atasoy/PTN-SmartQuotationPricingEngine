@@ -2,7 +2,6 @@
 
 export interface CreateRequestInput {
   customerId: string;
-  currency: number;
   items: {
     productId: string;
     quantity: number;
@@ -15,7 +14,6 @@ export interface RequestListItemDto {
   customerName: string;
   customerEmail: string;
   totalAmount: number;
-  currency: number;
   status: number;
   createdAt: string;
   lastModified?: string;
@@ -39,7 +37,6 @@ export interface RequestDetailDto {
   customerName: string;
   customerEmail: string;
   totalAmount: number;
-  currency: number;
   status: number;
   createdAt: string;
   lastModified?: string;

@@ -12,7 +12,6 @@ public class Request : BaseEntity
     public string RequestNo { get; private set; } = default!;
     public Guid CustomerId { get; private set; }
     public decimal TotalAmount { get; private set; }
-    public Currency Currency { get; private set; }
     public RequestStatus Status { get; private set; }
 
     // Navigation properties
@@ -23,7 +22,7 @@ public class Request : BaseEntity
 
     private Request() { } // EF Core
 
-    public static Request Create(string requestNo, Guid customerId, Currency currency)
+    public static Request Create(string requestNo, Guid customerId)
     {
         if (string.IsNullOrWhiteSpace(requestNo))
             throw new ArgumentException("Request number is required.", nameof(requestNo));
@@ -33,7 +32,6 @@ public class Request : BaseEntity
             RequestNo = requestNo.Trim(),
             CustomerId = customerId,
             TotalAmount = 0,
-            Currency = currency,
             Status = RequestStatus.Pending
         };
     }

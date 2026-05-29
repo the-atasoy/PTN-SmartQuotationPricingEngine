@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const requestQuoteSchema = z.object({
-  currency: z.enum(["TRY", "USD", "EUR"], { message: "Currency is required" }),
+  companyName: z.string().min(2, { message: "Company name must be at least 2 characters" }),
 });
 
 export type RequestQuoteFormData = z.infer<typeof requestQuoteSchema>;

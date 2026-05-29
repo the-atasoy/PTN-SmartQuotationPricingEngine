@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { getApiUrl } from "@/lib/api-endpoints";
-import { formatCurrency } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 
 interface PriceHistoryDto {
@@ -88,8 +88,8 @@ export default function ProductPriceHistoryPage() {
                   {new Date(item.createdAt).toLocaleString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                  {/* Note: Price History currency should ideally be fetched from the request, using USD as default fallback here or you might need it from API */}
-                  {formatCurrency(item.quotedPrice, 0 /* fallback to USD or fetch actual */)}
+                  {/* Note: Price History currency is now globally TRY */}
+                  {formatPrice(item.quotedPrice)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                   {item.requestNo}

@@ -33,7 +33,6 @@ public class GetAllRequestsQueryHandler : IRequestHandler<GetAllRequestsQuery, A
                 CustomerName = r.Customer.Name,
                 CustomerEmail = r.Customer.Email,
                 TotalAmount = r.TotalAmount,
-                Currency = r.Currency,
                 Status = r.Status,
                 CreatedAt = r.CreatedAt,
                 LastModified = r.UpdatedAt

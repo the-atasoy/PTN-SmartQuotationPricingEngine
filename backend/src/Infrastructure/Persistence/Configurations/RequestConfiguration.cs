@@ -28,10 +28,6 @@ public class RequestConfiguration : BaseEntityConfiguration<Request>
             .HasPrecision(18, 2)
             .IsRequired();
 
-        builder.Property(r => r.Currency)
-            .HasColumnName("currency")
-            .IsRequired();
-
         builder.Property(r => r.Status)
             .HasColumnName("status")
             .IsRequired();

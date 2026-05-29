@@ -35,7 +35,6 @@ public class GetRequestByIdQueryHandler : IRequestHandler<GetRequestByIdQuery, A
             CustomerName = entity.Customer.Name,
             CustomerEmail = entity.Customer.Email,
             TotalAmount = entity.TotalAmount,
-            Currency = entity.Currency,
             Status = entity.Status,
             CreatedAt = entity.CreatedAt,
             LastModified = entity.UpdatedAt,

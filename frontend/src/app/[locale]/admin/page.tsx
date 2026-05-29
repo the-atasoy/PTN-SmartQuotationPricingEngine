@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { requestsApi, RequestListItemDto } from "@/lib/api/requests";
 import { useRouter, useParams } from "next/navigation";
-import { formatCurrency } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 
 export default function AdminRequestsPage() {
@@ -96,7 +96,7 @@ export default function AdminRequestsPage() {
                   {new Date(req.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                  {formatCurrency(req.totalAmount, req.currency)}
+                  {formatPrice(req.totalAmount)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {getStatusBadge(req.status)}

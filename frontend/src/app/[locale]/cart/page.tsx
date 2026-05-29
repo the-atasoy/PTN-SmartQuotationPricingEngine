@@ -25,9 +25,7 @@ export default function CartPage() {
     formState: { errors },
   } = useForm<RequestQuoteFormData>({
     resolver: zodResolver(requestQuoteSchema),
-    defaultValues: {
-      currency: "TRY"
-    }
+    defaultValues: {}
   });
 
   const onSubmit = async (data: RequestQuoteFormData) => {
@@ -41,7 +39,6 @@ export default function CartPage() {
       
       const payload = {
         customerEmail: email,
-        currency: data.currency,
         items: items.map(item => ({
           productId: item.productId,
           quantity: item.quantity
@@ -157,24 +154,7 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Currency
-                </label>
-                <select
-                  id="currency"
-                  {...register("currency")}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow bg-white text-sm"
-                  disabled={isSubmitting}
-                >
-                  <option value="TRY">TRY (₺)</option>
-                  <option value="USD">USD ($)</option>
-                  <option value="EUR">EUR (€)</option>
-                </select>
-                {errors.currency && (
-                  <p className="text-red-500 text-xs mt-1">{errors.currency.message}</p>
-                )}
-              </div>
+
 
               <div className="pt-4 border-t border-gray-100">
                 <button

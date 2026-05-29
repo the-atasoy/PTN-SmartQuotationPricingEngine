@@ -77,7 +77,7 @@ public static class DataSeeder
             if (customers.Count == 0)
                 customers = await context.Customers.ToListAsync();
 
-            var seedRequest = Request.Create("RQ-20250515-001", customers[0].Id, Currency.TRY);
+            var seedRequest = Request.Create("RQ-20250515-001", customers[0].Id);
 
             seedRequest.AddItem(hmi.Id, 2, 11800.00m);
             seedRequest.AddItem(ledPanel.Id, 3, 43500.00m);

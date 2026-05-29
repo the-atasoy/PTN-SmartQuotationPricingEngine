@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { requestsApi, RequestDetailDto } from "@/lib/api/requests";
 import { excelApi, ParsedExcelResultDto } from "@/lib/api/excel";
 import { useRouter, useParams } from "next/navigation";
-import { formatCurrency } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 
 import { useAuth } from "@/context/AuthContext";
@@ -250,7 +250,7 @@ export default function AdminRequestDetailPage() {
                           <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">
                             {item.hasPreviousPrice ? (
                               <div>
-                                <div>{formatCurrency(item.lastRequestPrice!, request.currency)}</div>
+                                <div>{formatPrice(item.lastRequestPrice!)}</div>
                                 <div className="text-xs text-slate-400">{new Date(item.lastRequestDate!).toLocaleDateString()}</div>
                               </div>
                             ) : (
@@ -267,7 +267,7 @@ export default function AdminRequestDetailPage() {
                           </td>
 
                           <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">
-                            {formatCurrency(pricing.lineTotal, request.currency)}
+                            {formatPrice(pricing.lineTotal)}
                           </td>
                         </tr>
                       );
@@ -277,7 +277,7 @@ export default function AdminRequestDetailPage() {
               </div>
               <div className="p-6 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
                 <div className="text-xl font-bold text-slate-900">
-                  {t("GrandTotal")}: {formatCurrency(grandTotal, request.currency)}
+                  {t("GrandTotal")}: {formatPrice(grandTotal)}
                 </div>
                 <button 
                   onClick={handleSubmitQuotation}
@@ -309,15 +309,15 @@ export default function AdminRequestDetailPage() {
                 <tr key={item.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{item.productName}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{item.quantity}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{formatCurrency(item.unitPrice, request.currency)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{formatCurrency(item.lineTotal, request.currency)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{formatPrice(item.unitPrice)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{formatPrice(item.lineTotal)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           <div className="p-6 bg-slate-50 border-t border-slate-200 text-right">
             <div className="text-2xl font-bold text-slate-900">
-              {t("GrandTotal")}: {formatCurrency(request.totalAmount, request.currency)}
+              {t("GrandTotal")}: {formatPrice(request.totalAmount)}
             </div>
           </div>
         </div>
