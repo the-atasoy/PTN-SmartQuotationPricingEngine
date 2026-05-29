@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/Input";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/Button";
+import { formatCurrencyEnum } from "@/lib/enums";
 import { formatPrice } from "@/lib/utils";
 
 export function ProductsClient() {
@@ -130,6 +131,26 @@ export function ProductsClient() {
                     Base Price {renderSortIcon("BasePrice")}
                   </div>
                 </th>
+                {role === "Admin" && (
+                  <>
+                    <th 
+                      className="px-6 py-4 text-sm font-semibold text-slate-600 cursor-pointer group hover:bg-slate-100/50 transition-colors w-1/5"
+                      onClick={() => handleSort("LastRequestPrice")}
+                    >
+                      <div className="flex items-center">
+                        Last Quoted Price {renderSortIcon("LastRequestPrice")}
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-4 text-sm font-semibold text-slate-600 cursor-pointer group hover:bg-slate-100/50 transition-colors w-1/5"
+                      onClick={() => handleSort("LastRequestDate")}
+                    >
+                      <div className="flex items-center">
+                        Last Date {renderSortIcon("LastRequestDate")}
+                      </div>
+                    </th>
+                  </>
+                )}
                 {role !== "Admin" && (
                   <th className="px-6 py-4 text-sm font-semibold text-slate-600 w-1/5 text-right">
                     Action
@@ -140,19 +161,19 @@ export function ProductsClient() {
             <tbody className="divide-y divide-slate-100">
               {isLoading && !productsData ? (
                 <tr>
-                  <td colSpan={role === "Admin" ? 2 : 3} className="px-6 py-12 text-center">
+                  <td colSpan={role === "Admin" ? 4 : 3} className="px-6 py-12 text-center">
                     <div className="flex justify-center"><Spinner /></div>
                   </td>
                 </tr>
               ) : error ? (
                 <tr>
-                  <td colSpan={role === "Admin" ? 2 : 3} className="px-6 py-8 text-center text-red-500 font-medium">
+                  <td colSpan={role === "Admin" ? 4 : 3} className="px-6 py-8 text-center text-red-500 font-medium">
                     {error}
                   </td>
                 </tr>
               ) : productsData?.items.length === 0 ? (
                 <tr>
-                  <td colSpan={role === "Admin" ? 2 : 3} className="px-6 py-12 text-center text-slate-500">
+                  <td colSpan={role === "Admin" ? 4 : 3} className="px-6 py-12 text-center text-slate-500">
                     No products found matching your search.
                   </td>
                 </tr>
@@ -174,6 +195,20 @@ export function ProductsClient() {
                       <td className="px-6 py-4 text-slate-600">
                         {formatPrice(product.basePrice, product.basePriceCurrency)}
                       </td>
+                      {role === "Admin" && (
+                        <>
+                          <td className="px-6 py-4 text-slate-600">
+                            {product.lastRequestPrice != null 
+                              ? `${formatCurrencyEnum(product.lastRequestCurrency ?? 2)} ${product.lastRequestPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}` 
+                              : "-"}
+                          </td>
+                          <td className="px-6 py-4 text-slate-600">
+                            {product.lastRequestDate 
+                              ? new Date(product.lastRequestDate).toLocaleDateString()
+                              : "-"}
+                          </td>
+                        </>
+                      )}
                       {role !== "Admin" && (
                         <td className="px-6 py-4 text-right">
                           {quantity > 0 ? (
