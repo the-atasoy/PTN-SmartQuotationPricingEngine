@@ -46,7 +46,8 @@ public static class DataSeeder
         {
             Customer.Create("Aselsan Elektronik", "satin.alma@aselsan.com.tr", "+90 312 592 10 00"),
             Customer.Create("Türk Telekom", "tedarik@turktelekom.com.tr", "+90 312 555 00 00"),
-            Customer.Create("Arçelik A.Ş.", "procurement@arcelik.com", "+90 212 314 34 34")
+            Customer.Create("Arçelik A.Ş.", "procurement@arcelik.com", "+90 212 314 34 34"),
+            Customer.Create("Piton Technology User", "user@piton.com.tr", "+90 222 222 22 22")
         };
 
         context.Customers.AddRange(customers);
@@ -98,6 +99,37 @@ public static class DataSeeder
             };
 
             context.ProductPriceHistories.AddRange(histories);
+            
+            // Create 20 more dummy requests to simulate pagination
+            var random = new Random(42);
+            for (int i = 2; i <= 21; i++)
+            {
+                var reqDate = seedDate.AddDays(i);
+                var reqDateStr = reqDate.ToString("yyyyMMdd");
+                var c = customers[random.Next(customers.Count)];
+                
+                var dummyReq = Request.Create($"RQ-{reqDateStr}-{i:D3}", c.Id, Currency.TRY);
+                
+                // Add some items
+                dummyReq.AddItem(hmi.Id, random.Next(1, 10), 0);
+                dummyReq.AddItem(lcd.Id, random.Next(1, 5), 0);
+                
+                // Set custom CreatedAt
+                typeof(Domain.Common.BaseEntity).GetProperty("CreatedAt")?.SetValue(dummyReq, reqDate);
+                
+                // Set status for some requests
+                if (i % 3 == 0)
+                {
+                    dummyReq.UpdateItem(dummyReq.Items.First().Id, dummyReq.Items.First().Quantity, random.Next(10000, 20000));
+                    dummyReq.MarkAsSent();
+                }
+                else if (i % 5 == 0)
+                {
+                    dummyReq.Cancel();
+                }
+                
+                context.Requests.Add(dummyReq);
+            }
         }
     }
 }
