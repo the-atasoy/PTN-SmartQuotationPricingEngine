@@ -60,6 +60,7 @@
     "generic": "Something went wrong"
   },
   "Common": {
+    "UnauthorizedAdmin": "You do not have permission to access this page. (Admin role required)",
     "Loading": "Loading...",
     "Previous": "Previous",
     "Next": "Next"
@@ -75,6 +76,8 @@
     "StatusSent": "Sent",
     "StatusCancelled": "Cancelled",
     "NoRequests": "No quotation requests found.",
+    "NotFound": "Request not found",
+    "InvalidPrice": "Invalid price",
     "RequestDetail": "Request Detail",
     "DownloadOriginalExcel": "Download Original Excel",
     "CustomerInfo": "Customer Information",

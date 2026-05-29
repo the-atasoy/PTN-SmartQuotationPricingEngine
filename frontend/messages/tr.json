@@ -59,6 +59,7 @@
     "generic": "Bir şeyler yanlış gitti"
   },
   "Common": {
+    "UnauthorizedAdmin": "Bu sayfaya erişim yetkiniz yok. (Yönetici yetkisi gereklidir)",
     "Loading": "Yükleniyor...",
     "Previous": "Önceki",
     "Next": "Sonraki"
@@ -74,6 +75,8 @@
     "StatusSent": "Gönderildi",
     "StatusCancelled": "İptal Edildi",
     "NoRequests": "Hiç teklif talebi bulunamadı.",
+    "NotFound": "Talep bulunamadı",
+    "InvalidPrice": "Geçersiz fiyat",
     "RequestDetail": "Talep Detayı",
     "DownloadOriginalExcel": "Orijinal Excel'i İndir",
     "CustomerInfo": "Müşteri Bilgileri",

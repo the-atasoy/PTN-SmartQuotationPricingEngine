@@ -126,7 +126,7 @@ export default function AdminRequestDetailPage() {
       const pricing = quotationItems[item.productId];
       
       if (pricing.unitPrice <= 0) {
-        alert(`Invalid price for ${item.productName}`);
+        alert(`${t("InvalidPrice")}: ${item.productName}`);
         hasError = true;
       }
 
@@ -158,11 +158,11 @@ export default function AdminRequestDetailPage() {
   }
 
   if (role !== "Admin") {
-    return <div className="p-8 text-center text-red-600 font-semibold">Bu sayfaya erişim yetkiniz yok. (Admin role required)</div>;
+    return <div className="p-8 text-center text-red-600 font-semibold">{tCommon("UnauthorizedAdmin")}</div>;
   }
 
   if (!request) {
-    return <div className="p-8 text-center">Request not found</div>;
+    return <div className="p-8 text-center">{t("NotFound")}</div>;
   }
 
   const isPending = request.status === 0;
@@ -186,7 +186,7 @@ export default function AdminRequestDetailPage() {
           <div><strong className="text-slate-900">{t("Customer")}:</strong> {request.customerName}</div>
           <div><strong className="text-slate-900">{t("Email")}:</strong> {request.customerEmail}</div>
           <div><strong className="text-slate-900">{t("Date")}:</strong> {new Date(request.createdAt).toLocaleString()}</div>
-          <div><strong className="text-slate-900">{t("Status")}:</strong> {request.status === 0 ? "Pending" : request.status === 1 ? "Sent" : "Cancelled"}</div>
+          <div><strong className="text-slate-900">{t("Status")}:</strong> {request.status === 0 ? t("StatusPending") : request.status === 1 ? t("StatusSent") : t("StatusCancelled")}</div>
         </div>
       </div>
 
