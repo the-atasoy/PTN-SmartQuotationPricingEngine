@@ -58,5 +58,51 @@
     "required": "This field is required",
     "invalidEmail": "Enter a valid email",
     "generic": "Something went wrong"
+  },
+  "Common": {
+    "Loading": "Loading...",
+    "Previous": "Previous",
+    "Next": "Next"
+  },
+  "AdminRequests": {
+    "Title": "Quotation Requests",
+    "RequestNo": "Request No",
+    "Customer": "Customer",
+    "Date": "Date",
+    "Total": "Total",
+    "Status": "Status",
+    "StatusPending": "Pending",
+    "StatusSent": "Sent",
+    "StatusCancelled": "Cancelled",
+    "NoRequests": "No quotation requests found.",
+    "RequestDetail": "Request Detail",
+    "DownloadOriginalExcel": "Download Original Excel",
+    "CustomerInfo": "Customer Information",
+    "Email": "Email",
+    "UploadPricingExcel": "Upload Pricing Excel",
+    "DragAndDropExcel": "Drag and drop the filled Excel file here",
+    "QuotationEditor": "Quotation Editor",
+    "ProductName": "Product Name",
+    "Quantity": "Quantity",
+    "LastPrice": "Last Price",
+    "UnitPrice": "Unit Price",
+    "Discount": "Discount",
+    "LineTotal": "Line Total",
+    "NoPreviousPrice": "No previous price",
+    "GrandTotal": "Grand Total",
+    "SubmitQuotation": "Submit Quotation",
+    "FinalQuotation": "Final Quotation",
+    "ExcelParsedSuccess": "Excel file parsed successfully",
+    "ExcelParseFailed": "Failed to parse Excel file",
+    "QuotationSent": "Quotation sent successfully"
+  },
+  "AdminProducts": {
+    "PriceHistoryTitle": "Product Price History",
+    "PriceHistoryDesc": "View all past quotations sent for this product.",
+    "Date": "Date",
+    "QuotedPrice": "Quoted Price",
+    "RequestNo": "Request No",
+    "Customer": "Customer",
+    "NoPriceHistory": "No price history found for this product."
   }
 }

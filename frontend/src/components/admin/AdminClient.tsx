@@ -41,8 +41,21 @@ export function AdminClient() {
         <h1 className="text-2xl font-bold text-gray-900">{t("admin")}</h1>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-500">
-        <p>Yönetim paneli yakında burada olacak.</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Link 
+          href="/admin/requests"
+          className="bg-white p-6 rounded-xl shadow border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all group flex flex-col"
+        >
+          <h3 className="text-lg font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
+            Teklif Talepleri (Quotation Requests)
+          </h3>
+          <p className="text-sm text-slate-500 mt-2 flex-grow">
+            Müşterilerden gelen teklif taleplerini yönetin, fiyatlandırın ve müşterilere gönderin.
+          </p>
+          <div className="mt-4 text-sm font-medium text-indigo-600 group-hover:text-indigo-700">
+            Yönetime Git &rarr;
+          </div>
+        </Link>
       </div>
     </div>
   );
