@@ -7,6 +7,7 @@ public class Product : BaseEntity
 {
     public string Name { get; private set; } = default!;
     public decimal BasePrice { get; private set; }
+    public Currency BasePriceCurrency { get; private set; }
     public decimal? LastRequestPrice { get; private set; }
     public Currency? LastRequestCurrency { get; private set; }
     public DateTime? LastRequestDate { get; private set; }
@@ -17,7 +18,7 @@ public class Product : BaseEntity
 
     private Product() { } // EF Core
 
-    public static Product Create(string name, decimal basePrice)
+    public static Product Create(string name, decimal basePrice, Currency basePriceCurrency)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Product name is required.", nameof(name));
@@ -28,7 +29,8 @@ public class Product : BaseEntity
         return new Product
         {
             Name = name.Trim(),
-            BasePrice = basePrice
+            BasePrice = basePrice,
+            BasePriceCurrency = basePriceCurrency
         };
     }
 

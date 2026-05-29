@@ -192,7 +192,7 @@ export function ProductsClient() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-slate-600">
-                        ${product.basePrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        {formatPrice(product.basePrice, product.basePriceCurrency)}
                       </td>
                       {role === "Admin" && (
                         <>
