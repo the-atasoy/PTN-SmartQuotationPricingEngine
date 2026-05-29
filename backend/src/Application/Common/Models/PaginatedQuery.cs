@@ -8,4 +8,5 @@ public record PaginatedQuery
     public int PageSize { get; init; } = 10;
     public string? SortColumn { get; init; }
     public SortDirection? SortDirection { get; init; }
+    public string? SearchTerm { get; init; }
 }

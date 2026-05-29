@@ -3,8 +3,13 @@ import { getHeaders } from './api-client';
 import { PaginatedResult, ApiResponse, Product, PriceHistoryDto } from '../types/api';
 
 export const productsApi = {
-  getAll: async (page: number = 0, pageSize: number = 10, token: string | null = null) => {
-    const res = await fetch(`${getApiUrl(API_ENDPOINTS.PRODUCTS.BASE)}?page=${page}&pageSize=${pageSize}`, {
+  getAll: async (page: number = 0, pageSize: number = 10, search?: string, sortColumn?: string, sortDirection?: string, token: string | null = null) => {
+    let url = `${getApiUrl(API_ENDPOINTS.PRODUCTS.BASE)}?page=${page}&pageSize=${pageSize}`;
+    if (search) url += `&searchTerm=${encodeURIComponent(search)}`;
+    if (sortColumn) url += `&sortColumn=${sortColumn}`;
+    if (sortDirection) url += `&sortDirection=${sortDirection}`;
+
+    const res = await fetch(url, {
       method: 'GET',
       headers: getHeaders(token)
     });
@@ -12,8 +17,12 @@ export const productsApi = {
     return res.json() as Promise<ApiResponse<PaginatedResult<Product>>>;
   },
 
-  getPriceHistory: async (id: string, page: number = 0, pageSize: number = 10, token: string | null = null) => {
-    const res = await fetch(`${getApiUrl(API_ENDPOINTS.PRODUCTS.BASE)}/${id}/price-history?page=${page}&pageSize=${pageSize}`, {
+  getPriceHistory: async (id: string, page: number = 0, pageSize: number = 10, sortColumn?: string, sortDirection?: string, token: string | null = null) => {
+    let url = `${getApiUrl(API_ENDPOINTS.PRODUCTS.BASE)}/${id}/price-history?page=${page}&pageSize=${pageSize}`;
+    if (sortColumn) url += `&sortColumn=${sortColumn}`;
+    if (sortDirection) url += `&sortDirection=${sortDirection}`;
+
+    const res = await fetch(url, {
       method: 'GET',
       headers: getHeaders(token)
     });

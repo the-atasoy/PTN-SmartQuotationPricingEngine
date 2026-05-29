@@ -7,6 +7,8 @@ namespace Application.Features.Products.Queries.GetAllProducts;
 
 public record GetAllProductsQuery : PaginatedQuery, IRequest<ApiResponse<PaginatedResult<ProductDto>>>
 {
+    public bool IsAdmin { get; init; }
+
     public GetAllProductsQuery()
     {
         SortColumn = "Name";

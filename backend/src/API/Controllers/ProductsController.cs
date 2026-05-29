@@ -21,14 +21,16 @@ public class ProductsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "User,Admin")]
-    public async Task<IActionResult> GetAllProducts([FromQuery] int page = 0, [FromQuery] int pageSize = 10, [FromQuery] string? sortColumn = null, [FromQuery] Application.Common.Enums.SortDirection? sortDirection = null)
+    public async Task<IActionResult> GetAllProducts([FromQuery] int page = 0, [FromQuery] int pageSize = 10, [FromQuery] string? sortColumn = null, [FromQuery] Application.Common.Enums.SortDirection? sortDirection = null, [FromQuery] string? searchTerm = null)
     {
         var query = new GetAllProductsQuery 
         { 
             Page = page, 
             PageSize = pageSize, 
             SortColumn = sortColumn, 
-            SortDirection = sortDirection 
+            SortDirection = sortDirection,
+            SearchTerm = searchTerm,
+            IsAdmin = User.IsInRole("Admin")
         };
         var result = await _mediator.Send(query);
         

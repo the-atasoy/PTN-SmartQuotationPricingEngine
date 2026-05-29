@@ -20,6 +20,12 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, A
     {
         var query = _context.Products.AsNoTracking();
 
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
+            var term = request.SearchTerm.ToLower();
+            query = query.Where(p => p.Name.ToLower().Contains(term));
+        }
+
         var totalCount = await query.CountAsync(cancellationToken);
 
         var products = await query
@@ -30,9 +36,9 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, A
                 Id = p.Id,
                 Name = p.Name,
                 BasePrice = p.BasePrice,
-                LastRequestPrice = p.LastRequestPrice,
-                LastRequestCurrency = p.LastRequestCurrency,
-                LastRequestDate = p.LastRequestDate
+                LastRequestPrice = request.IsAdmin ? p.LastRequestPrice : null,
+                LastRequestCurrency = request.IsAdmin ? p.LastRequestCurrency : null,
+                LastRequestDate = request.IsAdmin ? p.LastRequestDate : null
             })
             .ToListAsync(cancellationToken);
 
