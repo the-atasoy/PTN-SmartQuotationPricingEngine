@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-import { Trash2, Plus, Minus, Loader2 } from "lucide-react";
+import { Trash2, Plus, Minus } from "lucide-react";
 import { Link } from "@/navigation";
 import { toast } from "sonner";
 import { getApiUrl, API_ENDPOINTS } from "@/lib/api-endpoints";

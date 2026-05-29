@@ -13,7 +13,6 @@ import { Pagination } from "@/components/common/Pagination";
 export default function ProductPriceHistoryPage() {
   const { accessToken } = useAuth();
   const t = useTranslations("AdminProducts");
-  const tCommon = useTranslations("Common");
   const params = useParams();
   const productId = params.id as string;
 
@@ -48,6 +47,7 @@ export default function ProductPriceHistoryPage() {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchHistory(page, sortColumn, sortDirection);
   }, [fetchHistory, page, sortColumn, sortDirection, productId]);
 
