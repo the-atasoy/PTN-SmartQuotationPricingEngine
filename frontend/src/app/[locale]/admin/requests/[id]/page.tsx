@@ -152,7 +152,7 @@ export default function AdminRequestDetailPage() {
         items: payloadItems
       }, accessToken);
       alert(t("QuotationSent"));
-      router.push(`/${locale}/admin/requests`);
+      router.push(`/${locale}/admin`);
     } catch (error: any) {
       alert(error.response?.data?.message || error.response?.data?.errors?.join(", ") || tCommon("generic"));
     } finally {
