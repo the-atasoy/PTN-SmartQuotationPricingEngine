@@ -1,4 +1,5 @@
 using Domain.Common;
+using Domain.Enums;
 
 namespace Domain.Entities;
 
@@ -6,7 +7,8 @@ public class ProductPriceHistory : BaseEntity
 {
     public Guid ProductId { get; private set; }
     public Guid RequestId { get; private set; }
-    public decimal QuotedPrice { get; private set; }
+    public Currency Currency { get; private set; }
+    public decimal Price { get; private set; }
 
     // Navigation properties
     public Product Product { get; private set; } = default!;
@@ -14,16 +16,17 @@ public class ProductPriceHistory : BaseEntity
 
     private ProductPriceHistory() { } // EF Core
 
-    public static ProductPriceHistory Create(Guid productId, Guid requestId, decimal quotedPrice)
+    public static ProductPriceHistory Create(Guid productId, Guid requestId, decimal price, Currency currency)
     {
-        if (quotedPrice < 0)
-            throw new ArgumentException("Quoted price cannot be negative.", nameof(quotedPrice));
+        if (price < 0)
+            throw new ArgumentException("Price cannot be negative.", nameof(price));
 
         return new ProductPriceHistory
         {
             ProductId = productId,
             RequestId = requestId,
-            QuotedPrice = quotedPrice
+            Currency = currency,
+            Price = price
         };
     }
 }

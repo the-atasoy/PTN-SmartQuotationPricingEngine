@@ -10,4 +10,5 @@ public class ParsedExcelResultDto
     public DateTime? LastRequestDate { get; set; }
     public bool HasPreviousPrice { get; set; }
     public decimal? UnitPrice { get; set; }
+    public decimal Discount { get; set; }
 }

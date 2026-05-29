@@ -13,5 +13,6 @@ public class CreateRequestItemDto
 public class CreateRequestCommand : IRequest<ApiResponse<Guid>>
 {
     public string CustomerEmail { get; set; } = default!;
+    public Currency Currency { get; set; }
     public List<CreateRequestItemDto> Items { get; set; } = new();
 }

@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { requestQuoteSchema, RequestQuoteFormData } from "@/lib/validations/cart";
 import { toast } from "sonner";
 import { getApiUrl, API_ENDPOINTS } from "@/lib/api-endpoints";
+import { Currency } from "@/lib/enums";
 
 export default function CartPage() {
   const t = useTranslations("cart");
@@ -18,6 +19,7 @@ export default function CartPage() {
   const { items, removeFromCart, updateQuantity, totalItems, clearCart } = useCart();
   const { email, accessToken } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedCurrency, setSelectedCurrency] = useState(Currency.TRY);
 
   const {
     register,
@@ -39,6 +41,7 @@ export default function CartPage() {
       
       const payload = {
         customerEmail: email,
+        currency: selectedCurrency,
         items: items.map(item => ({
           productId: item.productId,
           quantity: item.quantity
@@ -152,6 +155,21 @@ export default function CartPage() {
                 <div className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 break-all select-all font-medium text-sm">
                   {email}
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Currency
+                </label>
+                <select
+                  value={selectedCurrency}
+                  onChange={(e) => setSelectedCurrency(Number(e.target.value))}
+                  className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value={Currency.TRY}>TRY</option>
+                  <option value={Currency.USD}>USD</option>
+                  <option value={Currency.EUR}>EUR</option>
+                </select>
               </div>
 
 

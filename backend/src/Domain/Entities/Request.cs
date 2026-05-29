@@ -12,6 +12,7 @@ public class Request : BaseEntity
     public string RequestNo { get; private set; } = default!;
     public Guid CustomerId { get; private set; }
     public decimal TotalAmount { get; private set; }
+    public Currency Currency { get; private set; }
     public RequestStatus Status { get; private set; }
 
     // Navigation properties
@@ -22,7 +23,7 @@ public class Request : BaseEntity
 
     private Request() { } // EF Core
 
-    public static Request Create(string requestNo, Guid customerId)
+    public static Request Create(string requestNo, Guid customerId, Currency currency)
     {
         if (string.IsNullOrWhiteSpace(requestNo))
             throw new ArgumentException("Request number is required.", nameof(requestNo));
@@ -31,6 +32,7 @@ public class Request : BaseEntity
         {
             RequestNo = requestNo.Trim(),
             CustomerId = customerId,
+            Currency = currency,
             TotalAmount = 0,
             Status = RequestStatus.Pending
         };
@@ -52,12 +54,13 @@ public class Request : BaseEntity
         RecalculateTotal();
     }
 
-    public void UpdateItem(Guid itemId, int quantity, decimal unitPrice)
+    public void UpdateItem(Guid itemId, int quantity, decimal unitPrice, decimal discount = 0)
     {
-        var item = _items.FirstOrDefault(i => i.Id == itemId)
-            ?? throw new InvalidOperationException($"Item with id '{itemId}' not found in this request.");
+        var item = _items.FirstOrDefault(i => i.Id == itemId);
+        if (item == null)
+            throw new InvalidOperationException("Item not found in this request.");
 
-        item.Update(quantity, unitPrice);
+        item.Update(quantity, unitPrice, discount);
         RecalculateTotal();
     }
 

@@ -44,7 +44,7 @@ public class CreateRequestCommandHandler : IRequestHandler<CreateRequestCommand,
         var requestNo = $"RQ-{todayStr}-{(countToday + 1):D3}";
 
         // 3. Create Request
-        var newRequest = Request.Create(requestNo, customer.Id);
+        var newRequest = Request.Create(requestNo, customer.Id, request.Currency);
 
         // 4. Create RequestItem rows
         foreach (var item in request.Items)

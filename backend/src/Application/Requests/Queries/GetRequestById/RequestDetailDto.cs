@@ -10,7 +10,9 @@ public class RequestItemDetailDto
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal LineTotal { get; set; }
+    public decimal Discount { get; set; }
     public decimal? LastRequestPrice { get; set; }
+    public Currency? LastRequestCurrency { get; set; }
     public DateTime? LastRequestDate { get; set; }
 }
 
@@ -22,6 +24,7 @@ public class RequestDetailDto
     public string CustomerName { get; set; } = default!;
     public string CustomerEmail { get; set; } = default!;
     public decimal TotalAmount { get; set; }
+    public Currency Currency { get; set; }
     public RequestStatus Status { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? LastModified { get; set; }

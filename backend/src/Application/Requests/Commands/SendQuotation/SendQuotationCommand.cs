@@ -7,6 +7,7 @@ public class SendQuotationItemDto
 {
     public Guid ProductId { get; set; }
     public decimal UnitPrice { get; set; }
+    public decimal Discount { get; set; }
 }
 
 public class SendQuotationCommand : IRequest<ApiResponse>

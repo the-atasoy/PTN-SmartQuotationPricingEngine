@@ -35,6 +35,7 @@ public class GetRequestByIdQueryHandler : IRequestHandler<GetRequestByIdQuery, A
             CustomerName = entity.Customer.Name,
             CustomerEmail = entity.Customer.Email,
             TotalAmount = entity.TotalAmount,
+            Currency = entity.Currency,
             Status = entity.Status,
             CreatedAt = entity.CreatedAt,
             LastModified = entity.UpdatedAt,
@@ -46,7 +47,9 @@ public class GetRequestByIdQueryHandler : IRequestHandler<GetRequestByIdQuery, A
                 Quantity = i.Quantity,
                 UnitPrice = i.UnitPrice,
                 LineTotal = i.LineTotal,
+                Discount = i.Discount,
                 LastRequestPrice = i.Product.LastRequestPrice,
+                LastRequestCurrency = i.Product.LastRequestCurrency,
                 LastRequestDate = i.Product.LastRequestDate
             }).ToList()
         };

@@ -6,6 +6,7 @@ import { requestsApi, RequestListItemDto } from "@/lib/api/requests";
 import { useRouter, useParams } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
+import { formatCurrencyEnum } from "@/lib/enums";
 
 export default function AdminRequestsPage() {
   const { role, accessToken, isLoading: authLoading } = useAuth();
@@ -96,7 +97,7 @@ export default function AdminRequestsPage() {
                   {new Date(req.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                  {formatPrice(req.totalAmount)}
+                  {formatPrice(req.totalAmount)} {formatCurrencyEnum(req.currency)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {getStatusBadge(req.status)}

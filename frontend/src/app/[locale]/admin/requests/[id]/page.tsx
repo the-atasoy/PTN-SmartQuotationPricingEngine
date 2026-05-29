@@ -7,6 +7,7 @@ import { excelApi, ParsedExcelResultDto } from "@/lib/api/excel";
 import { useRouter, useParams } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
+import { formatCurrencyEnum } from "@/lib/enums";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -23,7 +24,7 @@ export default function AdminRequestDetailPage() {
   const [loading, setLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [parsedItems, setParsedItems] = useState<ParsedExcelResultDto[]>([]);
-  const [quotationItems, setQuotationItems] = useState<Record<string, { unitPrice: number; lineTotal: number }>>({});
+  const [quotationItems, setQuotationItems] = useState<Record<string, { unitPrice: number; discount: number; lineTotal: number }>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,10 +52,10 @@ export default function AdminRequestDetailPage() {
           }));
           setParsedItems(initialParsed);
           
-          const initialPricing: Record<string, { unitPrice: number; lineTotal: number }> = {};
+          const initialPricing: Record<string, { unitPrice: number; discount: number; lineTotal: number }> = {};
           initialParsed.forEach(item => {
             const unitPrice = item.lastRequestPrice ?? 0;
-            initialPricing[item.productId] = { unitPrice, lineTotal: unitPrice * item.quantity };
+            initialPricing[item.productId] = { unitPrice, discount: 0, lineTotal: unitPrice * item.quantity };
           });
           setQuotationItems(initialPricing);
         }
@@ -75,12 +76,14 @@ export default function AdminRequestDetailPage() {
       const res = await excelApi.parseExcel(file, requestId, accessToken);
       if (res.data) {
         setParsedItems(res.data);
-        const initialPricing: Record<string, { unitPrice: number; lineTotal: number }> = {};
+        const initialPricing: Record<string, { unitPrice: number; discount: number; lineTotal: number }> = {};
         res.data.forEach((item: any) => {
           const unitPrice = item.unitPrice ?? item.lastRequestPrice ?? 0;
+          const discount = item.discount ?? 0;
           initialPricing[item.productId] = {
             unitPrice: unitPrice,
-            lineTotal: unitPrice * item.quantity
+            discount: discount,
+            lineTotal: (unitPrice - discount) * item.quantity
           };
         });
         setQuotationItems(initialPricing);
@@ -95,16 +98,21 @@ export default function AdminRequestDetailPage() {
     }
   };
 
-  const handlePriceChange = (productId: string, quantity: number, val: string) => {
+  const handlePriceOrDiscountChange = (productId: string, quantity: number, val: string, field: 'price' | 'discount') => {
     const num = parseFloat(val);
-    const unitPrice = isNaN(num) ? 0 : num;
+    const value = isNaN(num) ? 0 : num;
     
     setQuotationItems(prev => {
+      const current = prev[productId] || { unitPrice: 0, discount: 0 };
+      const newUnitPrice = field === 'price' ? value : current.unitPrice;
+      const newDiscount = field === 'discount' ? value : current.discount;
+      
       return {
         ...prev,
         [productId]: {
-          unitPrice,
-          lineTotal: unitPrice * quantity
+          unitPrice: newUnitPrice,
+          discount: newDiscount,
+          lineTotal: (newUnitPrice - newDiscount) * quantity
         }
       };
     });
@@ -142,7 +150,8 @@ export default function AdminRequestDetailPage() {
 
       payloadItems.push({
         productId: item.productId,
-        unitPrice: pricing.unitPrice
+        unitPrice: pricing.unitPrice,
+        discount: pricing.discount
       });
     });
 
@@ -178,6 +187,8 @@ export default function AdminRequestDetailPage() {
   const isPending = request.status === 0;
   const grandTotal = Object.values(quotationItems).reduce((sum, item) => sum + item.lineTotal, 0);
 
+  const currencyStr = formatCurrencyEnum(request.currency);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-6">
@@ -195,6 +206,7 @@ export default function AdminRequestDetailPage() {
         <div className="grid grid-cols-2 gap-4 text-sm text-slate-600">
           <div><strong className="text-slate-900">{t("Customer")}:</strong> {request.customerName}</div>
           <div><strong className="text-slate-900">{t("Email")}:</strong> {request.customerEmail}</div>
+          <div><strong className="text-slate-900">Currency:</strong> {currencyStr}</div>
           <div><strong className="text-slate-900">{t("Date")}:</strong> {new Date(request.createdAt).toLocaleString()}</div>
           <div><strong className="text-slate-900">{t("Status")}:</strong> {request.status === 0 ? t("StatusPending") : request.status === 1 ? t("StatusSent") : t("StatusCancelled")}</div>
         </div>
@@ -232,6 +244,7 @@ export default function AdminRequestDetailPage() {
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("Quantity")}</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("LastPrice")}</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("UnitPrice")}</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Discount</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("LineTotal")}</th>
                     </tr>
                   </thead>
@@ -262,7 +275,15 @@ export default function AdminRequestDetailPage() {
                               type="number" 
                               className="w-24 border border-slate-300 rounded px-2 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500" 
                               value={pricing.unitPrice || ''}
-                              onChange={(e) => handlePriceChange(item.productId, item.quantity, e.target.value)}
+                              onChange={(e) => handlePriceOrDiscountChange(item.productId, item.quantity, e.target.value, 'price')}
+                            />
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">
+                            <input 
+                              type="number" 
+                              className="w-24 border border-slate-300 rounded px-2 py-1 text-sm focus:ring-indigo-500 focus:border-indigo-500" 
+                              value={pricing.discount || ''}
+                              onChange={(e) => handlePriceOrDiscountChange(item.productId, item.quantity, e.target.value, 'discount')}
                             />
                           </td>
 
@@ -277,7 +298,7 @@ export default function AdminRequestDetailPage() {
               </div>
               <div className="p-6 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
                 <div className="text-xl font-bold text-slate-900">
-                  {t("GrandTotal")}: {formatPrice(grandTotal)}
+                  {t("GrandTotal")}: {formatPrice(grandTotal)} {currencyStr}
                 </div>
                 <button 
                   onClick={handleSubmitQuotation}
@@ -301,6 +322,7 @@ export default function AdminRequestDetailPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("ProductName")}</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("Quantity")}</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("UnitPrice")}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Discount</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("LineTotal")}</th>
               </tr>
             </thead>
@@ -310,6 +332,7 @@ export default function AdminRequestDetailPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{item.productName}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{item.quantity}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{formatPrice(item.unitPrice)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{formatPrice(item.discount)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{formatPrice(item.lineTotal)}</td>
                 </tr>
               ))}
@@ -317,7 +340,7 @@ export default function AdminRequestDetailPage() {
           </table>
           <div className="p-6 bg-slate-50 border-t border-slate-200 text-right">
             <div className="text-2xl font-bold text-slate-900">
-              {t("GrandTotal")}: {formatPrice(request.totalAmount)}
+              {t("GrandTotal")}: {formatPrice(request.totalAmount)} {currencyStr}
             </div>
           </div>
         </div>

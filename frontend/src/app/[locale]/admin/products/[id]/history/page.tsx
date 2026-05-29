@@ -6,13 +6,15 @@ import { useParams } from "next/navigation";
 import { getApiUrl } from "@/lib/api-endpoints";
 import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
+import { formatCurrencyEnum } from "@/lib/enums";
 
 interface PriceHistoryDto {
   id: string;
   requestId: string;
   requestNo: string;
   customerName: string;
-  quotedPrice: number;
+  price: number;
+  currency: number;
   createdAt: string;
 }
 
@@ -88,8 +90,7 @@ export default function ProductPriceHistoryPage() {
                   {new Date(item.createdAt).toLocaleString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                  {/* Note: Price History currency is now globally TRY */}
-                  {formatPrice(item.quotedPrice)}
+                  {formatPrice(item.price)} {formatCurrencyEnum(item.currency)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                   {item.requestNo}

@@ -65,8 +65,8 @@ public static class DataSeeder
         // Pre-populate last_request_price and last_request_date for demo data
         var seedDate = new DateTime(2025, 5, 15, 10, 0, 0, DateTimeKind.Utc);
 
-        hmi.UpdateLastRequestPrice(11800.00m, seedDate);
-        ledPanel.UpdateLastRequestPrice(43500.00m, seedDate.AddDays(-10));
+        hmi.UpdateLastRequestPrice(11800.00m, Currency.TRY, seedDate);
+        ledPanel.UpdateLastRequestPrice(43500.00m, Currency.TRY, seedDate.AddDays(-10));
 
         context.Products.AddRange(hmi, ledPanel, lcd);
 
@@ -77,7 +77,7 @@ public static class DataSeeder
             if (customers.Count == 0)
                 customers = await context.Customers.ToListAsync();
 
-            var seedRequest = Request.Create("RQ-20250515-001", customers[0].Id);
+            var seedRequest = Request.Create("RQ-20250515-001", customers[0].Id, Currency.TRY);
 
             seedRequest.AddItem(hmi.Id, 2, 11800.00m);
             seedRequest.AddItem(ledPanel.Id, 3, 43500.00m);
@@ -89,12 +89,12 @@ public static class DataSeeder
             // Create 6 product_price_history rows
             var histories = new[]
             {
-                ProductPriceHistory.Create(hmi.Id, seedRequest.Id, 11800.00m),
-                ProductPriceHistory.Create(hmi.Id, seedRequest.Id, 12200.00m),
-                ProductPriceHistory.Create(hmi.Id, seedRequest.Id, 12500.00m),
-                ProductPriceHistory.Create(ledPanel.Id, seedRequest.Id, 43500.00m),
-                ProductPriceHistory.Create(ledPanel.Id, seedRequest.Id, 44000.00m),
-                ProductPriceHistory.Create(lcd.Id, seedRequest.Id, 21000.00m)
+                ProductPriceHistory.Create(hmi.Id, seedRequest.Id, 11800.00m, Currency.TRY),
+                ProductPriceHistory.Create(hmi.Id, seedRequest.Id, 12200.00m, Currency.TRY),
+                ProductPriceHistory.Create(hmi.Id, seedRequest.Id, 12500.00m, Currency.TRY),
+                ProductPriceHistory.Create(ledPanel.Id, seedRequest.Id, 43500.00m, Currency.TRY),
+                ProductPriceHistory.Create(ledPanel.Id, seedRequest.Id, 44000.00m, Currency.TRY),
+                ProductPriceHistory.Create(lcd.Id, seedRequest.Id, 21000.00m, Currency.TRY)
             };
 
             context.ProductPriceHistories.AddRange(histories);

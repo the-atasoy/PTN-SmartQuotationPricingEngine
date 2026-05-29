@@ -52,15 +52,15 @@ public class SendQuotationCommandHandler : IRequestHandler<SendQuotationCommand,
                     return ApiResponse.Fail($"Product {inputItem.ProductId} is not part of this request.", 400);
 
                 // Update request item
-                entity.UpdateItem(requestItem.Id, requestItem.Quantity, inputItem.UnitPrice);
+                entity.UpdateItem(requestItem.Id, requestItem.Quantity, inputItem.UnitPrice, inputItem.Discount);
 
                 if (products.TryGetValue(inputItem.ProductId, out var product))
                 {
                     // Update product last price
-                    product.UpdateLastRequestPrice(inputItem.UnitPrice, now);
+                    product.UpdateLastRequestPrice(inputItem.UnitPrice, entity.Currency, now);
 
                     // Insert price history
-                    var history = ProductPriceHistory.Create(product.Id, entity.Id, inputItem.UnitPrice);
+                    var history = ProductPriceHistory.Create(product.Id, entity.Id, inputItem.UnitPrice, entity.Currency);
                     _context.ProductPriceHistories.Add(history);
                 }
             }
@@ -81,7 +81,7 @@ public class SendQuotationCommandHandler : IRequestHandler<SendQuotationCommand,
         try
         {
             var tableRows = string.Join("", entity.Items.Select(i => 
-                $"<tr><td>{products[i.ProductId].Name}</td><td>{i.Quantity}</td><td>{i.UnitPrice:C}</td><td>{i.LineTotal:C}</td></tr>"
+                $"<tr><td>{products[i.ProductId].Name}</td><td>{i.Quantity}</td><td>{i.UnitPrice:C}</td><td>{i.Discount:C}</td><td>{i.LineTotal:C}</td></tr>"
             ));
 
             var htmlBody = $@"
@@ -90,13 +90,13 @@ public class SendQuotationCommandHandler : IRequestHandler<SendQuotationCommand,
                 <p>Here is your quotation (Request No: {entity.RequestNo}):</p>
                 <table border='1' cellpadding='5' cellspacing='0'>
                     <thead>
-                        <tr><th>Product</th><th>Quantity</th><th>Unit Price</th><th>Total</th></tr>
+                        <tr><th>Product</th><th>Quantity</th><th>Unit Price</th><th>Discount</th><th>Total</th></tr>
                     </thead>
                     <tbody>
                         {tableRows}
                     </tbody>
                 </table>
-                <h3>Grand Total: {entity.TotalAmount:C}</h3>
+                <h3>Grand Total: {entity.TotalAmount:C} ({entity.Currency})</h3>
                 <p>Thank you for your business!</p>
             ";
 

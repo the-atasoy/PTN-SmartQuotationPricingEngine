@@ -45,7 +45,8 @@ public class GetPriceHistoryQueryHandler : IRequestHandler<GetPriceHistoryQuery,
                 RequestId = ph.RequestId,
                 RequestNo = ph.Request.RequestNo,
                 CustomerName = ph.Request.Customer.Name,
-                QuotedPrice = ph.QuotedPrice,
+                Price = ph.Price,
+                Currency = ph.Currency,
                 CreatedAt = ph.CreatedAt
             })
             .ToListAsync(cancellationToken);

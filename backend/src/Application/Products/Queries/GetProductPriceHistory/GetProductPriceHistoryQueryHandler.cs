@@ -30,7 +30,8 @@ public class GetProductPriceHistoryQueryHandler : IRequestHandler<GetProductPric
             .Select(h => new PriceHistoryDto
             {
                 Date = h.CreatedAt,
-                QuotedPrice = h.QuotedPrice,
+                Price = h.Price,
+                Currency = h.Currency,
                 RequestNo = h.Request.RequestNo,
                 CustomerName = h.Request.Customer.Name
             })

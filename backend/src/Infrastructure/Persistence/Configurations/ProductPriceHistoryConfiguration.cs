@@ -18,9 +18,14 @@ public class ProductPriceHistoryConfiguration : BaseEntityConfiguration<ProductP
             .HasColumnName("request_id")
             .IsRequired();
 
-        builder.Property(ph => ph.QuotedPrice)
-            .HasColumnName("quoted_price")
+        builder.Property(ph => ph.Price)
+            .HasColumnName("price")
             .HasPrecision(18, 2)
+            .IsRequired();
+
+        builder.Property(ph => ph.Currency)
+            .HasColumnName("currency")
+            .HasConversion<int>()
             .IsRequired();
 
         // Composite index for querying price history by product ordered by date

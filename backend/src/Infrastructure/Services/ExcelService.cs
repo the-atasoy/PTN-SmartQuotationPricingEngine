@@ -29,9 +29,10 @@ public class ExcelService : IExcelService
         worksheet.Cells[1, 3].Value = _localizer["Excel_ProductName"];
         worksheet.Cells[1, 4].Value = _localizer["Excel_Quantity"];
         worksheet.Cells[1, 5].Value = _localizer["Excel_UnitPrice"];
+        worksheet.Cells[1, 6].Value = "Discount";
 
         // Make headers bold
-        using (var range = worksheet.Cells[1, 1, 1, 5])
+        using (var range = worksheet.Cells[1, 1, 1, 6])
         {
             range.Style.Font.Bold = true;
         }
@@ -46,6 +47,7 @@ public class ExcelService : IExcelService
             worksheet.Cells[row, 3].Value = item.Product.Name;
             worksheet.Cells[row, 4].Value = item.Quantity;
             worksheet.Cells[row, 5].Value = item.Product.LastRequestPrice;
+            worksheet.Cells[row, 6].Value = 0; // Default discount is 0
             row++;
         }
 
@@ -74,6 +76,7 @@ public class ExcelService : IExcelService
             var productName = worksheet.Cells[row, 3].Text;
             var quantityStr = worksheet.Cells[row, 4].Text;
             var unitPriceStr = worksheet.Cells[row, 5].Text;
+            var discountStr = worksheet.Cells[row, 6].Text;
 
             if (string.IsNullOrWhiteSpace(productIdStr) || !Guid.TryParse(productIdStr, out var productId))
                 continue; // Invalid row
@@ -85,13 +88,18 @@ public class ExcelService : IExcelService
             if (!string.IsNullOrWhiteSpace(unitPriceStr) && decimal.TryParse(unitPriceStr, out var parsedPrice))
                 unitPrice = parsedPrice;
 
+            decimal discount = 0;
+            if (!string.IsNullOrWhiteSpace(discountStr) && decimal.TryParse(discountStr, out var parsedDiscount))
+                discount = parsedDiscount;
+
             results.Add(new ParsedExcelResultDto
             {
                 RequestNo = requestNoStr,
                 ProductId = productId,
                 ProductName = productName,
                 Quantity = quantity,
-                UnitPrice = unitPrice
+                UnitPrice = unitPrice,
+                Discount = discount
             });
         }
 
