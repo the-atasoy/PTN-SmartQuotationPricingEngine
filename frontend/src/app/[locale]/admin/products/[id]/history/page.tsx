@@ -7,6 +7,7 @@ import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { productsApi } from "@/lib/api/products";
 import { PriceHistoryDto } from "@/lib/types/api";
+import { Spinner } from "@/components/ui/Spinner";
 import { Pagination } from "@/components/common/Pagination";
 
 export default function ProductPriceHistoryPage() {
@@ -47,7 +48,7 @@ export default function ProductPriceHistoryPage() {
   }, [fetchHistory, page, productId]);
 
   if (loading && history.length === 0) {
-    return <div className="p-8 text-center">{tCommon("Loading")}</div>;
+    return <div className="p-8 flex justify-center items-center h-[50vh]"><Spinner size="lg" /></div>;
   }
 
   return (

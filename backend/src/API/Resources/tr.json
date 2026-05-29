@@ -46,6 +46,8 @@
   "Email_UnitPrice": "Birim Fiyat",
   "Email_Discount": "İndirim",
   "Email_Total": "Toplam",
-  "Email_GrandTotal": "Genel Toplam: {0} ({1})",
+  "Email_DiscountPercent": "İndirim %",
+  "Email_GrandTotal": "Genel Toplam: {0}",
+  "Email_TotalDiscount": "Toplam İndirim: {0} ({1}%)",
   "Email_ThankYou": "Bizi tercih ettiğiniz için teşekkür ederiz!"
 }

@@ -37,6 +37,8 @@ public class ProductsController : ControllerBase
             return StatusCode(result.StatusCode, result);
         }
 
+        await Task.Delay(5000);
+
         return Ok(result);
     }
 

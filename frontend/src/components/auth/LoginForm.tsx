@@ -38,18 +38,24 @@ export function LoginForm() {
 
       const responseData = await res.json();
 
-      if (responseData.isSuccessful && responseData.data?.accessToken) {
-        const token = responseData.data.accessToken;
-        try {
-          const payload = JSON.parse(atob(token.split(".")[1]));
-          const emailClaim = payload.email || payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || "";
-          login(token, payload.role, emailClaim);
-        } catch {
-          login(token, "User", ""); // fallback if payload decode fails
-        }
-        toast.success(t("loginSuccess") || "Logged in successfully");
-        router.push("/products");
-      } else {
+        if (responseData.isSuccessful && responseData.data?.accessToken) {
+          const token = responseData.data.accessToken;
+          let role = "User";
+          try {
+            const payload = JSON.parse(atob(token.split(".")[1]));
+            const emailClaim = payload.email || payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || "";
+            role = payload.role || "User";
+            login(token, role, emailClaim);
+          } catch {
+            login(token, "User", ""); // fallback if payload decode fails
+          }
+          toast.success(t("loginSuccess") || "Logged in successfully");
+          if (role === "Admin") {
+            router.push("/admin");
+          } else {
+            router.push("/products");
+          }
+        } else {
         toast.error(responseData.message || t("loginFailed") || "Login failed");
       }
     } catch {

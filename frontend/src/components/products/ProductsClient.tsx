@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { Spinner } from "@/components/ui/Spinner";
 import { ProductCard } from "./ProductCard";
 import { productsApi } from "@/lib/api/products";
 import { Product, PaginatedResult } from "@/lib/types/api";
@@ -45,7 +46,7 @@ export function ProductsClient() {
 
   // While auth is being restored, show a loading state to avoid "unauthorized" flash
   if (authLoading) {
-    return <div className="p-8 text-center text-gray-500">{t("loading")}</div>;
+    return <div className="p-8 flex justify-center items-center"><Spinner size="lg" /></div>;
   }
 
   if (!token) {
@@ -57,7 +58,7 @@ export function ProductsClient() {
   }
 
   if (isLoading) {
-    return <div className="p-8 text-center text-gray-500">{t("loading")}</div>;
+    return <div className="p-8 flex justify-center items-center"><Spinner size="lg" /></div>;
   }
 
   if (error) {

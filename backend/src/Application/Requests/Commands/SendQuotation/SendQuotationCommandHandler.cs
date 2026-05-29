@@ -54,7 +54,7 @@ public class SendQuotationCommandHandler : IRequestHandler<SendQuotationCommand,
             {
                 var requestItem = entity.Items.FirstOrDefault(i => i.ProductId == inputItem.ProductId);
                 if (requestItem == null)
-                    return ApiResponse.Fail(_localizer["ProductNotInRequest", inputItem.ProductId].Value, 400);
+                    return ApiResponse.Fail(_localizer["ProductNotInRequest", inputItem.ProductId].Value);
 
                 // Update request item
                 entity.UpdateItem(requestItem.Id, requestItem.Quantity, inputItem.UnitPrice, inputItem.Discount);
@@ -85,9 +85,24 @@ public class SendQuotationCommandHandler : IRequestHandler<SendQuotationCommand,
         // Send Email
         try
         {
+            var currencySymbol = entity.Currency switch
+            {
+                Currency.TRY => "₺",
+                Currency.USD => "$",
+                Currency.EUR => "€",
+                _ => ""
+            };
+
             var tableRows = string.Join("", entity.Items.Select(i => 
-                $"<tr><td>{products[i.ProductId].Name}</td><td>{i.Quantity}</td><td>{i.UnitPrice:C}</td><td>{i.Discount:C}</td><td>{i.LineTotal:C}</td></tr>"
-            ));
+            {
+                var dp = i.UnitPrice > 0 ? (i.Discount / i.UnitPrice) * 100 : 0;
+                return $"<tr><td>{products[i.ProductId].Name}</td><td>{i.Quantity}</td><td>{currencySymbol}{i.UnitPrice:N2}</td><td>{currencySymbol}{i.Discount:N2}</td><td>{dp:N2}%</td><td>{currencySymbol}{i.LineTotal:N2}</td></tr>";
+            }));
+
+            var totalDiscountAmount = entity.Items.Sum(i => i.Discount * i.Quantity);
+            var grandTotal = entity.TotalAmount;
+            var totalBeforeDiscount = grandTotal + totalDiscountAmount;
+            var overallDiscountPercent = totalBeforeDiscount > 0 ? (totalDiscountAmount / totalBeforeDiscount) * 100 : 0;
 
             var htmlBody = $@"
                 <!DOCTYPE html>
@@ -133,6 +148,7 @@ public class SendQuotationCommandHandler : IRequestHandler<SendQuotationCommand,
                                             <th>{_localizer["Email_Quantity"].Value}</th>
                                             <th>{_localizer["Email_UnitPrice"].Value}</th>
                                             <th>{_localizer["Email_Discount"].Value}</th>
+                                            <th>{_localizer["Email_DiscountPercent"].Value}</th>
                                             <th>{_localizer["Email_Total"].Value}</th>
                                         </tr>
                                     </thead>
@@ -143,7 +159,12 @@ public class SendQuotationCommandHandler : IRequestHandler<SendQuotationCommand,
                             </div>
                         </div>
                         <div class=""grand-total"">
-                            {_localizer["Email_GrandTotal", entity.TotalAmount.ToString("C"), entity.Currency].Value}
+                            <div style=""font-size: 14px; font-weight: normal; color: #555; margin-bottom: 5px;"">
+                                {_localizer["Email_TotalDiscount", currencySymbol + totalDiscountAmount.ToString("N2"), overallDiscountPercent.ToString("N2")].Value}
+                            </div>
+                            <div>
+                                {_localizer["Email_GrandTotal", currencySymbol + entity.TotalAmount.ToString("N2")].Value}
+                            </div>
                         </div>
                         <div class=""footer"">
                             <p>{_localizer["Email_ThankYou"].Value}</p>

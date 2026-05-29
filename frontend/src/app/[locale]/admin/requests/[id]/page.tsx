@@ -15,6 +15,7 @@ import { formatCurrencyEnum } from "@/lib/enums";
 import { Button } from "@/components/ui/Button";
 
 import { useAuth } from "@/context/AuthContext";
+import { Spinner } from "@/components/ui/Spinner";
 
 export default function AdminRequestDetailPage() {
   const { role, accessToken, isLoading: authLoading } = useAuth();
@@ -223,7 +224,7 @@ export default function AdminRequestDetailPage() {
   };
 
   if (authLoading || (loading && !request)) {
-    return <div className="p-8 text-center">{tCommon("Loading")}</div>;
+    return <div className="p-8 flex justify-center items-center h-[50vh]"><Spinner size="lg" /></div>;
   }
 
   if (role !== "Admin") {

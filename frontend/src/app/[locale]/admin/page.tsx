@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { requestsApi, RequestListItemDto } from "@/lib/api/requests";
 import { useRouter, useParams } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
+import { Spinner } from "@/components/ui/Spinner";
 import { useAuth } from "@/context/AuthContext";
 import { Pagination } from "@/components/common/Pagination";
 
@@ -73,7 +74,7 @@ export default function AdminRequestsPage() {
   };
 
   if (authLoading || (loading && requests.length === 0)) {
-    return <div className="p-8 text-center">{tCommon("Loading")}</div>;
+    return <div className="p-8 flex justify-center items-center h-[50vh]"><Spinner size="lg" /></div>;
   }
 
   if (role !== "Admin") {

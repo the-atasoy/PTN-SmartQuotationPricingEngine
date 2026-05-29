@@ -34,7 +34,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
         </div>
 
-        {product.lastRequestPrice != null && product.lastRequestDate && product.lastRequestCurrency != null && (
+        {role === "Admin" && product.lastRequestPrice != null && product.lastRequestDate && product.lastRequestCurrency != null && (
           <div className="mt-2 text-sm text-gray-500">
             {t("lastQuote")}: {formatPrice(product.lastRequestPrice, product.lastRequestCurrency)}
             <br />

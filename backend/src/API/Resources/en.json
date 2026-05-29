@@ -46,6 +46,8 @@
   "Email_UnitPrice": "Unit Price",
   "Email_Discount": "Discount",
   "Email_Total": "Total",
-  "Email_GrandTotal": "Grand Total: {0} ({1})",
+  "Email_DiscountPercent": "Discount %",
+  "Email_GrandTotal": "Grand Total: {0}",
+  "Email_TotalDiscount": "Total Discount: {0} ({1}%)",
   "Email_ThankYou": "Thank you for your business!"
 }
