@@ -6,6 +6,7 @@ import { requestsApi, RequestDetailDto } from "@/lib/api/requests";
 import { excelApi, ParsedExcelResultDto } from "@/lib/api/excel";
 import { useRouter, useParams } from "next/navigation";
 import { formatCurrency } from "@/lib/utils";
+import { toast } from "sonner";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -81,10 +82,10 @@ export default function AdminRequestDetailPage() {
         });
         setQuotationItems(initialPricing);
       } else {
-        alert(res.errors?.join(", ") || t("ExcelParseFailed"));
+        toast.error(res.errors?.join(", ") || t("ExcelParseFailed"));
       }
     } catch (error: any) {
-      alert(error.message || t("ExcelParseFailed"));
+      toast.error(error.message || t("ExcelParseFailed"));
       if (fileInputRef.current) fileInputRef.current.value = '';
     } finally {
       setIsUploading(false);
@@ -119,7 +120,7 @@ export default function AdminRequestDetailPage() {
       document.body.removeChild(a);
     } catch (error) {
       console.error("Failed to download excel", error);
-      alert(tCommon("generic"));
+      toast.error(tCommon("generic"));
     }
   };
 
@@ -133,7 +134,7 @@ export default function AdminRequestDetailPage() {
       const pricing = quotationItems[item.productId];
       
       if (pricing.unitPrice <= 0) {
-        alert(`${t("InvalidPrice")}: ${item.productName}`);
+        toast.error(`${t("InvalidPrice")}: ${item.productName}`);
         hasError = true;
       }
 
@@ -151,10 +152,10 @@ export default function AdminRequestDetailPage() {
         requestId: request.id,
         items: payloadItems
       }, accessToken);
-      alert(t("QuotationSent"));
+      toast.success(t("QuotationSent"));
       router.push(`/${locale}/admin`);
     } catch (error: any) {
-      alert(error.response?.data?.message || error.response?.data?.errors?.join(", ") || tCommon("generic"));
+      toast.error(error.response?.data?.message || error.response?.data?.errors?.join(", ") || tCommon("generic"));
     } finally {
       setIsSubmitting(false);
     }

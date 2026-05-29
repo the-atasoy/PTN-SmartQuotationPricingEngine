@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 import { Navbar } from "@/components/layout/Navbar";
-
+import { Toaster } from "sonner";
 import { routing } from "@/routing";
 
 const locales = routing.locales;
@@ -38,6 +38,7 @@ export default async function LocaleLayout({
           <main className="min-h-screen bg-gray-50">
             {children}
           </main>
+          <Toaster position="top-right" richColors />
         </CartProvider>
       </AuthProvider>
     </NextIntlClientProvider>
