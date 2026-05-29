@@ -44,7 +44,9 @@ Docker and Docker Compose must be installed on your system.
 
 ### Option 2: Running in Local Development Environment (Manual)
 
-If you want to run the project in a development environment without Docker:
+If you want to run the project in a development environment (partially without Docker):
+
+**Prerequisites:** Node.js, .NET 10, and Docker must be installed on your system.
 
 1. **Start Infrastructure Services (DB and Mail only):**
    ```bash

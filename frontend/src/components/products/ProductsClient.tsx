@@ -12,7 +12,7 @@ import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/Button";
 
 export function ProductsClient() {
-  const { accessToken: token, isLoading: authLoading } = useAuth();
+  const { accessToken: token, isLoading: authLoading, role } = useAuth();
   const { addToCart, updateQuantity, items: cartItems } = useCart();
   const t = useTranslations("Products");
   const [productsData, setProductsData] = useState<PaginatedResult<Product> | null>(null);
@@ -129,27 +129,29 @@ export function ProductsClient() {
                     Base Price {renderSortIcon("BasePrice")}
                   </div>
                 </th>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-600 w-1/5 text-right">
-                  Action
-                </th>
+                {role !== "Admin" && (
+                  <th className="px-6 py-4 text-sm font-semibold text-slate-600 w-1/5 text-right">
+                    Action
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isLoading && !productsData ? (
                 <tr>
-                  <td colSpan={3} className="px-6 py-12 text-center">
+                  <td colSpan={role === "Admin" ? 2 : 3} className="px-6 py-12 text-center">
                     <div className="flex justify-center"><Spinner /></div>
                   </td>
                 </tr>
               ) : error ? (
                 <tr>
-                  <td colSpan={3} className="px-6 py-8 text-center text-red-500 font-medium">
+                  <td colSpan={role === "Admin" ? 2 : 3} className="px-6 py-8 text-center text-red-500 font-medium">
                     {error}
                   </td>
                 </tr>
               ) : productsData?.items.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="px-6 py-12 text-center text-slate-500">
+                  <td colSpan={role === "Admin" ? 2 : 3} className="px-6 py-12 text-center text-slate-500">
                     No products found matching your search.
                   </td>
                 </tr>
@@ -171,42 +173,44 @@ export function ProductsClient() {
                       <td className="px-6 py-4 text-slate-600">
                         ${product.basePrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        {quantity > 0 ? (
-                          <div className="flex items-center justify-end gap-3">
-                            <button 
-                              onClick={() => updateQuantity(product.id, quantity - 1)}
-                              className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400"
-                              aria-label="Decrease quantity"
+                      {role !== "Admin" && (
+                        <td className="px-6 py-4 text-right">
+                          {quantity > 0 ? (
+                            <div className="flex items-center justify-end gap-3">
+                              <button 
+                                onClick={() => updateQuantity(product.id, quantity - 1)}
+                                className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400"
+                                aria-label="Decrease quantity"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                              </button>
+                              <span className="w-4 text-center font-medium text-slate-700">{quantity}</span>
+                              <button 
+                                onClick={() => updateQuantity(product.id, quantity + 1)}
+                                className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400"
+                                aria-label="Increase quantity"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                              </button>
+                            </div>
+                          ) : (
+                            <Button
+                              variant="primary"
+                              onClick={() => addToCart({ id: product.id, name: product.name, price: product.basePrice })}
+                              className="rounded-full shadow-sm"
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            </button>
-                            <span className="w-4 text-center font-medium text-slate-700">{quantity}</span>
-                            <button 
-                              onClick={() => updateQuantity(product.id, quantity + 1)}
-                              className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400"
-                              aria-label="Increase quantity"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            </button>
-                          </div>
-                        ) : (
-                          <Button
-                            variant="primary"
-                            onClick={() => addToCart({ id: product.id, name: product.name, price: product.basePrice })}
-                            className="rounded-full shadow-sm"
-                          >
-                            <span className="flex items-center gap-2">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="9" cy="21" r="1"></circle>
-                                <circle cx="20" cy="21" r="1"></circle>
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                              </svg>
-                              Add to Cart
-                            </span>
-                          </Button>
-                        )}
-                      </td>
+                              <span className="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <circle cx="9" cy="21" r="1"></circle>
+                                  <circle cx="20" cy="21" r="1"></circle>
+                                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                </svg>
+                                Add to Cart
+                              </span>
+                            </Button>
+                          )}
+                        </td>
+                      )}
                     </tr>
                   );
                 })

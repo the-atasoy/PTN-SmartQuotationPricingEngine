@@ -36,7 +36,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:5100
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=smart_quotation;Username=postgres;Password=postgres
-      - Jwt__Secret=change-me-in-production
+      - Jwt__Secret=HtGbRs3LxtCeEvA0Xnbkw6hbnpuIXVSlCIlOSNU3+Nu3ZgwQ4d5+H/yu+baR1bmiqkP+A5fkDaK+xTuBQhdKvA==
       - Jwt__Issuer=smart-quotation
       - Jwt__Audience=smart-quotation
       - Email__SmtpHost=mailpit

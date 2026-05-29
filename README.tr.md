@@ -44,7 +44,9 @@ Sisteminizde Docker ve Docker Compose kurulu olmalıdır.
 
 ### Seçenek 2: Lokal Geliştirme Ortamında (Manuel) Çalıştırma
 
-Eğer projeyi Docker olmadan, geliştirme ortamında ayağa kaldırmak isterseniz:
+Eğer projeyi geliştirme ortamında (kısmen Docker olmadan) ayağa kaldırmak isterseniz:
+
+**Önkoşullar:** Sisteminizde Node.js, .NET 10 ve Docker kurulu olmalıdır.
 
 1. **Altyapı Servislerini Başlatın (Sadece DB ve Mail):**
    ```bash
