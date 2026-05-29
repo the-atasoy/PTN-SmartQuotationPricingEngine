@@ -59,9 +59,9 @@ public static class DataSeeder
             return;
 
         // Seed 3 products: HMI, Led Panel, LCD
-        var hmi = Product.Create("HMI", 12500.00m);
-        var ledPanel = Product.Create("Led Panel", 45000.00m);
-        var lcd = Product.Create("LCD", 22000.00m);
+        var hmi = Product.Create("HMI", 12500.00m, Currency.TRY);
+        var ledPanel = Product.Create("Led Panel", 45000.00m, Currency.TRY);
+        var lcd = Product.Create("LCD", 22000.00m, Currency.TRY);
 
         // Pre-populate last_request_price and last_request_date for demo data
         var seedDate = new DateTime(2025, 5, 15, 10, 0, 0, DateTimeKind.Utc);

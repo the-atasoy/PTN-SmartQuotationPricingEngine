@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/Input";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/Button";
+import { formatPrice } from "@/lib/utils";
 
 export function ProductsClient() {
   const { accessToken: token, isLoading: authLoading, role } = useAuth();
@@ -171,7 +172,7 @@ export function ProductsClient() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-slate-600">
-                        ${product.basePrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        {formatPrice(product.basePrice, product.basePriceCurrency)}
                       </td>
                       {role !== "Admin" && (
                         <td className="px-6 py-4 text-right">

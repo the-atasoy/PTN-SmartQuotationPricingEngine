@@ -19,6 +19,7 @@ export interface Product {
   id: string;
   name: string;
   basePrice: number;
+  basePriceCurrency: number;
   lastRequestPrice: number | null;
   lastRequestCurrency: number | null;
   lastRequestDate: string | null;
