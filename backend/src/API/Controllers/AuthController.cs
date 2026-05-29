@@ -1,5 +1,4 @@
 using Application.Features.Auth.Commands;
-using Application.Features.Auth.DTOs;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
