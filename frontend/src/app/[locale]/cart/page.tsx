@@ -58,7 +58,7 @@ export default function CartPage() {
           toast.error(responseData.message || t("requestFailed") || "Failed to submit request.");
         }
       }
-    } catch (error) {
+    } catch {
       toast.error(t("unexpectedError") || "An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);

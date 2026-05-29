@@ -8,7 +8,7 @@ export interface PaginatedResult<T> {
   hasPreviousPage: boolean;
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T;
   isSuccessful: boolean;
   statusCode: number;
