@@ -5,4 +5,10 @@ using MediatR;
 
 namespace Application.Features.Products.Queries.GetAllProducts;
 
-public record GetAllProductsQuery(int Page = 0, int PageSize = 10, string? SortColumn = "Name", SortDirection? SortDirection = null) : IRequest<ApiResponse<PaginatedResult<ProductDto>>>;
+public record GetAllProductsQuery : PaginatedQuery, IRequest<ApiResponse<PaginatedResult<ProductDto>>>
+{
+    public GetAllProductsQuery()
+    {
+        SortColumn = "Name";
+    }
+}

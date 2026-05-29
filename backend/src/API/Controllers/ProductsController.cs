@@ -23,7 +23,13 @@ public class ProductsController : ControllerBase
     [Authorize(Roles = "User,Admin")]
     public async Task<IActionResult> GetAllProducts([FromQuery] int page = 0, [FromQuery] int pageSize = 10, [FromQuery] string? sortColumn = null, [FromQuery] Application.Common.Enums.SortDirection? sortDirection = null)
     {
-        var query = new GetAllProductsQuery(page, pageSize, sortColumn, sortDirection);
+        var query = new GetAllProductsQuery 
+        { 
+            Page = page, 
+            PageSize = pageSize, 
+            SortColumn = sortColumn, 
+            SortDirection = sortDirection 
+        };
         var result = await _mediator.Send(query);
         
         if (!result.IsSuccessful)
@@ -38,7 +44,13 @@ public class ProductsController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetPriceHistory(Guid id, [FromQuery] int page = 0, [FromQuery] int pageSize = 10, [FromQuery] string? sortColumn = null, [FromQuery] Application.Common.Enums.SortDirection? sortDirection = null)
     {
-        var query = new GetPriceHistoryQuery(id, page, pageSize, sortColumn, sortDirection);
+        var query = new GetPriceHistoryQuery(id) 
+        { 
+            Page = page, 
+            PageSize = pageSize, 
+            SortColumn = sortColumn, 
+            SortDirection = sortDirection 
+        };
         var result = await _mediator.Send(query);
 
         if (!result.IsSuccessful)

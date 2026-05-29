@@ -6,11 +6,9 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { Trash2, Plus, Minus, Loader2 } from "lucide-react";
 import { Link } from "@/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { requestQuoteSchema, RequestQuoteFormData } from "@/lib/validations/cart";
 import { toast } from "sonner";
 import { getApiUrl, API_ENDPOINTS } from "@/lib/api-endpoints";
+import { Currency } from "@/lib/enums";
 
 export default function CartPage() {
   const t = useTranslations("cart");
@@ -18,21 +16,12 @@ export default function CartPage() {
   const { items, removeFromCart, updateQuantity, totalItems, clearCart } = useCart();
   const { email, accessToken } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedCurrency, setSelectedCurrency] = useState(Currency.TRY);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RequestQuoteFormData>({
-    resolver: zodResolver(requestQuoteSchema),
-    defaultValues: {
-      currency: "TRY"
-    }
-  });
-
-  const onSubmit = async (data: RequestQuoteFormData) => {
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!email) {
-      toast.error("Please login to request a quotation.");
+      toast.error(t("loginRequired") || "Please login to request a quotation.");
       return;
     }
 
@@ -41,14 +30,14 @@ export default function CartPage() {
       
       const payload = {
         customerEmail: email,
-        currency: data.currency,
+        currency: selectedCurrency,
         items: items.map(item => ({
           productId: item.productId,
           quantity: item.quantity
         }))
       };
 
-      const res = await fetch(getApiUrl(API_ENDPOINTS.REQUESTS.CREATE), {
+      const res = await fetch(getApiUrl(API_ENDPOINTS.REQUESTS.BASE), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,8 +58,8 @@ export default function CartPage() {
           toast.error(responseData.message || t("requestFailed") || "Failed to submit request.");
         }
       }
-    } catch (error) {
-      toast.error("An unexpected error occurred.");
+    } catch {
+      toast.error(t("unexpectedError") || "An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);
     }
@@ -147,7 +136,7 @@ export default function CartPage() {
           <div className="bg-white shadow-sm rounded-xl border border-gray-200 p-6 sticky top-20">
             <h2 className="text-lg font-medium text-gray-900 mb-6">{t("requestQuote")}</h2>
             
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={onSubmit} className="space-y-5">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
                   Email
@@ -158,23 +147,21 @@ export default function CartPage() {
               </div>
 
               <div>
-                <label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
                   Currency
                 </label>
                 <select
-                  id="currency"
-                  {...register("currency")}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow bg-white text-sm"
-                  disabled={isSubmitting}
+                  value={selectedCurrency}
+                  onChange={(e) => setSelectedCurrency(Number(e.target.value))}
+                  className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="TRY">TRY (₺)</option>
-                  <option value="USD">USD ($)</option>
-                  <option value="EUR">EUR (€)</option>
+                  <option value={Currency.TRY}>TRY</option>
+                  <option value={Currency.USD}>USD</option>
+                  <option value={Currency.EUR}>EUR</option>
                 </select>
-                {errors.currency && (
-                  <p className="text-red-500 text-xs mt-1">{errors.currency.message}</p>
-                )}
               </div>
+
+
 
               <div className="pt-4 border-t border-gray-100">
                 <button

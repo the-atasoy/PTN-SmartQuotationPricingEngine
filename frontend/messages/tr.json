@@ -55,7 +55,59 @@
   },
   "errors": {
     "required": "Bu alan zorunludur",
-    "invalidEmail": "Geçerli bir e-posta giriniz",
-    "generic": "Bir hata oluştu"
+    "invalidEmail": "Geçerli bir e-posta adresi girin",
+    "generic": "Bir şeyler yanlış gitti"
+  },
+  "Common": {
+    "UnauthorizedAdmin": "Bu sayfaya erişim yetkiniz yok. (Yönetici yetkisi gereklidir)",
+    "Loading": "Yükleniyor...",
+    "Previous": "Önceki",
+    "Next": "Sonraki",
+    "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin."
+  },
+  "AdminRequests": {
+    "Title": "Teklif Talepleri",
+    "RequestNo": "Talep No",
+    "Customer": "Müşteri",
+    "Date": "Tarih",
+    "Total": "Toplam",
+    "Status": "Durum",
+    "StatusPending": "Bekliyor",
+    "StatusSent": "Gönderildi",
+    "StatusCancelled": "İptal Edildi",
+    "NoRequests": "Hiç teklif talebi bulunamadı.",
+    "NotFound": "Talep bulunamadı",
+    "InvalidPrice": "Geçersiz fiyat",
+    "RequestDetail": "Talep Detayı",
+    "DownloadOriginalExcel": "Orijinal Excel'i İndir",
+    "CustomerInfo": "Müşteri Bilgileri",
+    "Email": "E-posta",
+    "UploadPricingExcel": "Fiyatlandırma Excel'i Yükle",
+    "DragAndDropExcel": "Doldurulmuş Excel dosyasını buraya sürükleyin",
+    "QuotationEditor": "Teklif Düzenleyici",
+    "ProductName": "Ürün Adı",
+    "Quantity": "Miktar",
+    "LastPrice": "Son Fiyat",
+    "UnitPrice": "Birim Fiyat",
+    "Discount": "İskonto",
+    "LineTotal": "Satır Toplamı",
+    "NoPreviousPrice": "Önceki fiyat yok",
+    "GrandTotal": "Genel Toplam",
+    "SubmitQuotation": "Teklifi Gönder",
+    "FinalQuotation": "Nihai Teklif",
+    "ExcelParsedSuccess": "Excel dosyası başarıyla ayrıştırıldı",
+    "ExcelParseFailed": "Excel dosyası ayrıştırılamadı",
+    "QuotationSent": "Teklif başarıyla gönderildi",
+    "RequestedItems": "Talep Edilen Ürünler",
+    "InvalidExcelFile": "Yüklenen Excel dosyası bu talebe ait değil."
+  },
+  "AdminProducts": {
+    "PriceHistoryTitle": "Ürün Fiyat Geçmişi",
+    "PriceHistoryDesc": "Bu ürün için gönderilen tüm geçmiş teklifleri görüntüleyin.",
+    "Date": "Tarih",
+    "QuotedPrice": "Teklif Edilen Fiyat",
+    "RequestNo": "Talep No",
+    "Customer": "Müşteri",
+    "NoPriceHistory": "Bu ürün için fiyat geçmişi bulunamadı."
   }
 }

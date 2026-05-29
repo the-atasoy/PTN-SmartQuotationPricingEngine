@@ -24,6 +24,10 @@ public class ProductConfiguration : BaseEntityConfiguration<Product>
             .HasColumnName("last_request_price")
             .HasPrecision(18, 2);
 
+        builder.Property(p => p.LastRequestCurrency)
+            .HasColumnName("last_request_currency")
+            .HasConversion<int>();
+
         builder.Property(p => p.LastRequestDate)
             .HasColumnName("last_request_date");
 

@@ -6,5 +6,6 @@ public class ProductDto
     public string Name { get; init; } = default!;
     public decimal BasePrice { get; init; }
     public decimal? LastRequestPrice { get; init; }
+    public Domain.Enums.Currency? LastRequestCurrency { get; init; }
     public DateTime? LastRequestDate { get; init; }
 }

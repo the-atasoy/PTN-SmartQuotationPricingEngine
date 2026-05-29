@@ -1,5 +1,5 @@
 using Application.Common.Models;
-using Application.Features.Auth.Dtos;
+using Application.Features.Auth.DTOs;
 using Application.Interfaces;
 using Application.Resources;
 using MediatR;

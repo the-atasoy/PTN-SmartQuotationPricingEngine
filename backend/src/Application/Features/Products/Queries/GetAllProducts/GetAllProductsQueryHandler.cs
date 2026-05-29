@@ -31,6 +31,7 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, A
                 Name = p.Name,
                 BasePrice = p.BasePrice,
                 LastRequestPrice = p.LastRequestPrice,
+                LastRequestCurrency = p.LastRequestCurrency,
                 LastRequestDate = p.LastRequestDate
             })
             .ToListAsync(cancellationToken);

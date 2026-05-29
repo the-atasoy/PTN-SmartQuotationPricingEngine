@@ -30,10 +30,12 @@ public class RequestConfiguration : BaseEntityConfiguration<Request>
 
         builder.Property(r => r.Currency)
             .HasColumnName("currency")
+            .HasConversion<int>()
             .IsRequired();
 
         builder.Property(r => r.Status)
             .HasColumnName("status")
+            .HasConversion<int>()
             .IsRequired();
 
         builder.HasIndex(r => r.Status);

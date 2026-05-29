@@ -6,38 +6,6 @@ namespace Application.Common.Extensions;
 
 public static class IQueryableExtensions
 {
-    public static IQueryable<T> WhereIf<T>(this IQueryable<T> query, bool condition, Expression<Func<T, bool>> expression)
-    {
-        return condition ? query.Where(expression) : query;
-    }
-
-    public static IQueryable<T> ContainsAny<T>(
-        this IQueryable<T> query,
-        Expression<Func<T, string>> propertySelector,
-        IReadOnlyCollection<string> values)
-    {
-        if (values is null || values.Count == 0)
-            return query;
-
-        var parameter = propertySelector.Parameters[0];
-        var property = propertySelector.Body;
-
-        var notNull = Expression.NotEqual(property, Expression.Constant(null, typeof(string)));
-
-        var containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!;
-
-        Expression? orChain = null;
-        foreach (var value in values)
-        {
-            var containsCall = Expression.Call(property, containsMethod, Expression.Constant(value));
-            orChain = orChain == null ? containsCall : Expression.OrElse(orChain, containsCall);
-        }
-
-        var body = Expression.AndAlso(notNull, orChain!);
-        var predicate = Expression.Lambda<Func<T, bool>>(body, parameter);
-
-        return query.Where(predicate);
-    }
 
     public static IQueryable<T> Sort<T>(
         this IQueryable<T> query,

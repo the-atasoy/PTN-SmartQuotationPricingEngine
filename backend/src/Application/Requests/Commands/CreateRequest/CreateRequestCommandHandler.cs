@@ -43,13 +43,8 @@ public class CreateRequestCommandHandler : IRequestHandler<CreateRequestCommand,
 
         var requestNo = $"RQ-{todayStr}-{(countToday + 1):D3}";
 
-        if (!Enum.TryParse<Currency>(request.Currency, out var currency))
-        {
-            return ApiResponse<Guid>.Fail("Invalid currency format.", 422);
-        }
-
         // 3. Create Request
-        var newRequest = Request.Create(requestNo, customer.Id, currency);
+        var newRequest = Request.Create(requestNo, customer.Id, request.Currency);
 
         // 4. Create RequestItem rows
         foreach (var item in request.Items)

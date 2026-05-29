@@ -4,6 +4,7 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { formatPrice } from "@/lib/utils";
 
 interface ProductCardProps {
   product: {
@@ -11,6 +12,7 @@ interface ProductCardProps {
     name: string;
     basePrice: number;
     lastRequestPrice?: number | null;
+    lastRequestCurrency?: number | null;
     lastRequestDate?: string | null;
   };
 }
@@ -31,9 +33,9 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
         </div>
 
-        {product.lastRequestPrice != null && product.lastRequestDate && (
+        {product.lastRequestPrice != null && product.lastRequestDate && product.lastRequestCurrency != null && (
           <div className="mt-2 text-sm text-gray-500">
-            {t("lastQuote")}: ${product.lastRequestPrice.toFixed(2)}
+            {t("lastQuote")}: {formatPrice(product.lastRequestPrice, product.lastRequestCurrency)}
             <br />
             <span className="text-xs">
               {t("on")} {new Date(product.lastRequestDate!).toLocaleDateString()}

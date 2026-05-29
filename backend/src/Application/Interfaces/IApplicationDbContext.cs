@@ -11,6 +11,7 @@ public interface IApplicationDbContext
     DbSet<Request> Requests { get; }
     DbSet<RequestItem> RequestItems { get; }
     DbSet<ProductPriceHistory> ProductPriceHistories { get; }
+        Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade Database { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

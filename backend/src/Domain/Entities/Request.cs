@@ -32,8 +32,8 @@ public class Request : BaseEntity
         {
             RequestNo = requestNo.Trim(),
             CustomerId = customerId,
-            TotalAmount = 0,
             Currency = currency,
+            TotalAmount = 0,
             Status = RequestStatus.Pending
         };
     }
@@ -54,12 +54,13 @@ public class Request : BaseEntity
         RecalculateTotal();
     }
 
-    public void UpdateItem(Guid itemId, int quantity, decimal unitPrice)
+    public void UpdateItem(Guid itemId, int quantity, decimal unitPrice, decimal discount = 0)
     {
-        var item = _items.FirstOrDefault(i => i.Id == itemId)
-            ?? throw new InvalidOperationException($"Item with id '{itemId}' not found in this request.");
+        var item = _items.FirstOrDefault(i => i.Id == itemId);
+        if (item == null)
+            throw new InvalidOperationException("Item not found in this request.");
 
-        item.Update(quantity, unitPrice);
+        item.Update(quantity, unitPrice, discount);
         RecalculateTotal();
     }
 
