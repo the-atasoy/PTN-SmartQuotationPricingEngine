@@ -46,7 +46,9 @@ public class GetRequestByIdQueryHandler : IRequestHandler<GetRequestByIdQuery, A
                 ProductName = i.Product.Name,
                 Quantity = i.Quantity,
                 UnitPrice = i.UnitPrice,
-                LineTotal = i.LineTotal
+                LineTotal = i.LineTotal,
+                LastRequestPrice = i.Product.LastRequestPrice,
+                LastRequestDate = i.Product.LastRequestDate
             }).ToList()
         };
 

@@ -45,13 +45,16 @@ export default function AdminRequestDetailPage() {
             productId: i.productId,
             productName: i.productName,
             quantity: i.quantity,
-            hasPreviousPrice: false
+            hasPreviousPrice: i.lastRequestPrice != null,
+            lastRequestPrice: i.lastRequestPrice,
+            lastRequestDate: i.lastRequestDate
           }));
           setParsedItems(initialParsed);
           
           const initialPricing: Record<string, { unitPrice: number; lineTotal: number }> = {};
           initialParsed.forEach(item => {
-            initialPricing[item.productId] = { unitPrice: 0, lineTotal: 0 };
+            const unitPrice = item.lastRequestPrice ?? 0;
+            initialPricing[item.productId] = { unitPrice, lineTotal: unitPrice * item.quantity };
           });
           setQuotationItems(initialPricing);
         }

@@ -10,6 +10,8 @@ public class RequestItemDetailDto
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal LineTotal { get; set; }
+    public decimal? LastRequestPrice { get; set; }
+    public DateTime? LastRequestDate { get; set; }
 }
 
 public class RequestDetailDto

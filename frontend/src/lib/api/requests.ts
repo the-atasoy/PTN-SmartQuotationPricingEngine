@@ -28,6 +28,8 @@ export interface RequestItemDetailDto {
   quantity: number;
   unitPrice: number;
   lineTotal: number;
+  lastRequestPrice?: number;
+  lastRequestDate?: string;
 }
 
 export interface RequestDetailDto {
