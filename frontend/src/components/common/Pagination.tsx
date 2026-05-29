@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@/components/ui/Button';
 
 interface PaginationProps {
   page: number;
@@ -15,20 +16,20 @@ export function Pagination({ page, totalPages, hasNextPage, hasPreviousPage, onP
         Page {page} of {totalPages === 0 ? 1 : totalPages}
       </div>
       <div className="flex space-x-2">
-        <button
+        <Button
+          variant="secondary"
           disabled={!hasPreviousPage}
           onClick={() => onPageChange(page - 1)}
-          className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-50"
         >
           Previous
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="secondary"
           disabled={!hasNextPage}
           onClick={() => onPageChange(page + 1)}
-          className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-50"
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );

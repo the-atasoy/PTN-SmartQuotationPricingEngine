@@ -90,22 +90,78 @@ public class SendQuotationCommandHandler : IRequestHandler<SendQuotationCommand,
             ));
 
             var htmlBody = $@"
-                <h2>{_localizer["Email_QuotationDetails"].Value}</h2>
-                <p>{_localizer["Email_Hello", entity.Customer.Name].Value}</p>
-                <p>{_localizer["Email_QuotationIntro", entity.RequestNo].Value}</p>
-                <table border='1' cellpadding='5' cellspacing='0'>
-                    <thead>
-                        <tr><th>{_localizer["Email_Product"].Value}</th><th>{_localizer["Email_Quantity"].Value}</th><th>{_localizer["Email_UnitPrice"].Value}</th><th>{_localizer["Email_Discount"].Value}</th><th>{_localizer["Email_Total"].Value}</th></tr>
-                    </thead>
-                    <tbody>
-                        {tableRows}
-                    </tbody>
-                </table>
-                <h3>{_localizer["Email_GrandTotal", entity.TotalAmount.ToString("C"), entity.Currency].Value}</h3>
-                <p>{_localizer["Email_ThankYou"].Value}</p>
+                <!DOCTYPE html>
+                <html lang=""en"">
+                <head>
+                    <meta charset=""UTF-8"">
+                    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+                    <title>Quotation {entity.RequestNo}</title>
+                    <style>
+                        body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; color: #333; }}
+                        .container {{ max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }}
+                        .header {{ background-color: #050a18; padding: 30px; text-align: center; border-bottom: 4px solid #2980b9; }}
+                        .header img {{ max-width: 150px; }}
+                        .header h2 {{ color: #ffffff; margin: 20px 0 0 0; font-weight: 300; letter-spacing: 1px; }}
+                        .content {{ padding: 40px 30px; }}
+                        .greeting {{ font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #2c3e50; }}
+                        .intro-text {{ font-size: 15px; line-height: 1.6; color: #555; margin-bottom: 30px; }}
+                        .table-container {{ overflow-x: auto; }}
+                        table {{ width: 100%; border-collapse: collapse; margin-bottom: 30px; border-radius: 4px; overflow: hidden; }}
+                        th {{ background-color: #f8f9fa; color: #2c3e50; font-weight: 600; text-transform: uppercase; font-size: 12px; padding: 15px; text-align: left; border-bottom: 2px solid #e9ecef; }}
+                        td {{ padding: 15px; border-bottom: 1px solid #e9ecef; font-size: 14px; color: #555; }}
+                        .grand-total {{ text-align: right; background-color: #f8f9fa; padding: 20px 30px; border-top: 2px solid #e9ecef; font-size: 20px; color: #2c3e50; font-weight: bold; }}
+                        .footer {{ background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #e9ecef; }}
+                        .footer p {{ margin: 5px 0; }}
+                        .footer a {{ color: #2980b9; text-decoration: none; }}
+                    </style>
+                </head>
+                <body>
+                    <div class=""container"">
+                        <div class=""header"">
+                            <img src=""https://piton.com.tr/images/logo/piton-white-logo.svg"" alt=""PITON Technology"">
+                            <h2>{_localizer["Email_QuotationDetails"].Value}</h2>
+                        </div>
+                        <div class=""content"">
+                            <p class=""greeting"">{_localizer["Email_Hello", entity.Customer.Name].Value}</p>
+                            <p class=""intro-text"">{_localizer["Email_QuotationIntro", entity.RequestNo].Value}</p>
+                            
+                            <div class=""table-container"">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>{_localizer["Email_Product"].Value}</th>
+                                            <th>{_localizer["Email_Quantity"].Value}</th>
+                                            <th>{_localizer["Email_UnitPrice"].Value}</th>
+                                            <th>{_localizer["Email_Discount"].Value}</th>
+                                            <th>{_localizer["Email_Total"].Value}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {tableRows}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class=""grand-total"">
+                            {_localizer["Email_GrandTotal", entity.TotalAmount.ToString("C"), entity.Currency].Value}
+                        </div>
+                        <div class=""footer"">
+                            <p>{_localizer["Email_ThankYou"].Value}</p>
+                            <p>PITON Technology - Eskişehir Osmangazi Üniversitesi Meşelik Kampüsü, ETGB Teknoparkı No:202</p>
+                            <p><a href=""https://piton.com.tr/"">www.piton.com.tr</a></p>
+                        </div>
+                    </div>
+                </body>
+                </html>
             ";
 
-            await _emailService.SendEmailAsync(entity.Customer.Email, $"Quotation {entity.RequestNo}", htmlBody);
+            var subject = _localizer["Email_Subject", entity.RequestNo].Value;
+            if (string.IsNullOrEmpty(subject) || subject == "Email_Subject")
+            {
+                subject = $"Quotation {entity.RequestNo}";
+            }
+
+            await _emailService.SendEmailAsync(entity.Customer.Email, subject, htmlBody);
         }
         catch (Exception ex)
         {

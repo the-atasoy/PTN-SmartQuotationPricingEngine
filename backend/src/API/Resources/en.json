@@ -38,6 +38,7 @@
   "Excel_Currency": "Currency",
   "Excel_Totals": "TOTALS",
   "Email_QuotationDetails": "Quotation Details",
+  "Email_Subject": "Quotation {0}",
   "Email_Hello": "Hello {0},",
   "Email_QuotationIntro": "Here is your quotation (Request No: {0}):",
   "Email_Product": "Product",

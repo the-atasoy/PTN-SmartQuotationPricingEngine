@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { formatPrice } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 interface ProductCardProps {
   product: {
@@ -45,13 +46,14 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {role !== "Admin" && (
           <div className="mt-auto pt-6">
-            <button
+            <Button
+              variant="primary"
               onClick={() => addToCart({ id: product.id, name: product.name, price: product.basePrice })}
-              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors font-medium cursor-pointer"
+              className="w-full flex items-center justify-center gap-2"
             >
               <PlusCircle className="w-5 h-5" />
               {t("addToCart")}
-            </button>
+            </Button>
           </div>
         )}
       </div>

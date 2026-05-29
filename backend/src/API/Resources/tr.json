@@ -38,6 +38,7 @@
   "Excel_Currency": "Para Birimi",
   "Excel_Totals": "TOPLAM",
   "Email_QuotationDetails": "Teklif Detayları",
+  "Email_Subject": "{0} Numaralı Teklif",
   "Email_Hello": "Merhaba {0},",
   "Email_QuotationIntro": "İşte teklifiniz (Talep No: {0}):",
   "Email_Product": "Ürün",
