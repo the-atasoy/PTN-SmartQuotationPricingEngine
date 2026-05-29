@@ -4,7 +4,10 @@ export enum Currency {
   EUR = 3
 }
 
-export const formatCurrencyEnum = (currencyVal: number) => {
+export const formatCurrencyEnum = (currencyVal: number | string) => {
+  if (typeof currencyVal === 'string') {
+    return currencyVal;
+  }
   switch (currencyVal) {
     case Currency.TRY: return 'TRY';
     case Currency.USD: return 'USD';

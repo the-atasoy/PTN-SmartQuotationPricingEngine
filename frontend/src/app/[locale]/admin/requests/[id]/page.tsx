@@ -185,7 +185,22 @@ export default function AdminRequestDetailPage() {
   }
 
   const isPending = request.status === 0;
-  const grandTotal = Object.values(quotationItems).reduce((sum, item) => sum + item.lineTotal, 0);
+  
+  const grandTotal = parsedItems.reduce((sum, item) => {
+    const pricing = quotationItems[item.productId] || { unitPrice: 0, discount: 0 };
+    return sum + (pricing.unitPrice - pricing.discount) * item.quantity;
+  }, 0);
+  const totalDiscountAmount = parsedItems.reduce((sum, item) => {
+    const pricing = quotationItems[item.productId] || { discount: 0 };
+    return sum + (pricing.discount * item.quantity);
+  }, 0);
+  const totalBeforeDiscount = grandTotal + totalDiscountAmount;
+  const overallDiscountPercent = totalBeforeDiscount > 0 ? ((totalDiscountAmount / totalBeforeDiscount) * 100).toFixed(2) : "0.00";
+
+  const finalTotalDiscount = request?.items.reduce((sum, item) => sum + (item.discount * item.quantity), 0) || 0;
+  const finalGrandTotal = request?.totalAmount || 0;
+  const finalTotalBeforeDiscount = finalGrandTotal + finalTotalDiscount;
+  const finalOverallDiscountPercent = finalTotalBeforeDiscount > 0 ? ((finalTotalDiscount / finalTotalBeforeDiscount) * 100).toFixed(2) : "0.00";
 
   const currencyStr = formatCurrencyEnum(request.currency);
 
@@ -245,6 +260,7 @@ export default function AdminRequestDetailPage() {
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("LastPrice")}</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("UnitPrice")}</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Discount</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Discount %</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("LineTotal")}</th>
                     </tr>
                   </thead>
@@ -286,6 +302,9 @@ export default function AdminRequestDetailPage() {
                               onChange={(e) => handlePriceOrDiscountChange(item.productId, item.quantity, e.target.value, 'discount')}
                             />
                           </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">
+                            {pricing.unitPrice > 0 ? ((pricing.discount / pricing.unitPrice) * 100).toFixed(2) : "0.00"}%
+                          </td>
 
                           <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-900">
                             {formatPrice(pricing.lineTotal)}
@@ -297,8 +316,13 @@ export default function AdminRequestDetailPage() {
                 </table>
               </div>
               <div className="p-6 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
-                <div className="text-xl font-bold text-slate-900">
-                  {t("GrandTotal")}: {formatPrice(grandTotal)} {currencyStr}
+                <div className="space-y-1">
+                  <div className="text-sm text-slate-500 font-medium">
+                    Total Discount: {formatPrice(totalDiscountAmount)} {currencyStr} ({overallDiscountPercent}%)
+                  </div>
+                  <div className="text-xl font-bold text-slate-900">
+                    {t("GrandTotal")}: {formatPrice(grandTotal)} {currencyStr}
+                  </div>
                 </div>
                 <button 
                   onClick={handleSubmitQuotation}
@@ -323,6 +347,7 @@ export default function AdminRequestDetailPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("Quantity")}</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("UnitPrice")}</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Discount</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Discount %</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">{t("LineTotal")}</th>
               </tr>
             </thead>
@@ -333,14 +358,22 @@ export default function AdminRequestDetailPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{item.quantity}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{formatPrice(item.unitPrice)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{formatPrice(item.discount)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                    {item.unitPrice > 0 ? ((item.discount / item.unitPrice) * 100).toFixed(2) : "0.00"}%
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{formatPrice(item.lineTotal)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="p-6 bg-slate-50 border-t border-slate-200 text-right">
-            <div className="text-2xl font-bold text-slate-900">
-              {t("GrandTotal")}: {formatPrice(request.totalAmount)} {currencyStr}
+          <div className="p-6 bg-slate-50 border-t border-slate-200 flex justify-end">
+            <div className="text-right space-y-1">
+              <div className="text-sm text-slate-500 font-medium">
+                Total Discount: {formatPrice(finalTotalDiscount)} {currencyStr} ({finalOverallDiscountPercent}%)
+              </div>
+              <div className="text-2xl font-bold text-slate-900">
+                {t("GrandTotal")}: {formatPrice(finalGrandTotal)} {currencyStr}
+              </div>
             </div>
           </div>
         </div>
