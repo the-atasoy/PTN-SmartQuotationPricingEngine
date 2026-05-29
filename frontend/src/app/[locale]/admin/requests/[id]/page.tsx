@@ -12,8 +12,10 @@ import { useRouter, useParams } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import { formatCurrencyEnum } from "@/lib/enums";
+import { Button } from "@/components/ui/Button";
 
 import { useAuth } from "@/context/AuthContext";
+import { Spinner } from "@/components/ui/Spinner";
 
 export default function AdminRequestDetailPage() {
   const { role, accessToken, isLoading: authLoading } = useAuth();
@@ -222,7 +224,7 @@ export default function AdminRequestDetailPage() {
   };
 
   if (authLoading || (loading && !request)) {
-    return <div className="p-8 text-center">{tCommon("Loading")}</div>;
+    return <div className="p-8 flex justify-center items-center h-[50vh]"><Spinner size="lg" /></div>;
   }
 
   if (role !== "Admin") {
@@ -276,12 +278,13 @@ export default function AdminRequestDetailPage() {
         <h1 className="text-3xl font-bold text-slate-900">
           {t("RequestDetail")} - {request.requestNo}
         </h1>
-        <button
+        <Button
           onClick={handleDownloadExcel}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow-sm text-sm font-medium transition-colors cursor-pointer"
+          variant="primary"
+          className="bg-indigo-600 hover:bg-indigo-700 shadow-sm"
         >
           {t("DownloadOriginalExcel")}
-        </button>
+        </Button>
       </div>
 
       <div className="bg-white p-6 rounded-xl shadow border border-slate-200 mb-8">
@@ -477,13 +480,13 @@ export default function AdminRequestDetailPage() {
                     {formatPrice(grandTotal, request.currency)}
                   </div>
                 </div>
-                <button
+                <Button
                   onClick={handleSubmitQuotation}
-                  disabled={isSubmitting}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg shadow font-medium transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                  isLoading={isSubmitting}
+                  className="px-6 py-3 shadow"
                 >
-                  {isSubmitting ? tCommon("Loading") : t("SubmitQuotation")}
-                </button>
+                  {t("SubmitQuotation")}
+                </Button>
               </div>
             </div>
           )}

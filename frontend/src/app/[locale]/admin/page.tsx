@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { requestsApi, RequestListItemDto } from "@/lib/api/requests";
 import { useRouter, useParams } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
+import { Spinner } from "@/components/ui/Spinner";
 import { useAuth } from "@/context/AuthContext";
 import { Pagination } from "@/components/common/Pagination";
 
@@ -20,16 +21,21 @@ export default function AdminRequestsPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const pageSize = 10;
+  const [totalCount, setTotalCount] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  
+  const [sortColumn, setSortColumn] = useState<string>("CreatedAt");
+  const [sortDirection, setSortDirection] = useState<string>("Desc");
 
   const fetchRequests = useCallback(
-    async (pageIndex: number) => {
+    async (pageIndex: number, currentSortCol: string, currentSortDir: string) => {
       try {
         setLoading(true);
-        const res = await requestsApi.getAll(pageIndex, pageSize, accessToken);
+        const res = await requestsApi.getAll(pageIndex, pageSize, currentSortCol, currentSortDir, accessToken);
         if (res.data) {
           setRequests(res.data.items);
           setTotalPages(res.data.totalPages);
+          setTotalCount(res.data.totalCount);
         }
       } catch (error) {
         console.error("Failed to fetch requests", error);
@@ -37,15 +43,24 @@ export default function AdminRequestsPage() {
         setLoading(false);
       }
     },
-    [accessToken],
+    [accessToken, pageSize],
   );
 
   useEffect(() => {
     if (role === "Admin") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      void fetchRequests(page);
+      void fetchRequests(page, sortColumn, sortDirection);
     }
-  }, [fetchRequests, page, role]);
+  }, [fetchRequests, page, sortColumn, sortDirection, role]);
+
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === "Asc" ? "Desc" : "Asc");
+    } else {
+      setSortColumn(column);
+      setSortDirection("Asc");
+    }
+    setPage(0);
+  };
 
   const getStatusBadge = (status: number) => {
     switch (status) {
@@ -73,7 +88,7 @@ export default function AdminRequestsPage() {
   };
 
   if (authLoading || (loading && requests.length === 0)) {
-    return <div className="p-8 text-center">{tCommon("Loading")}</div>;
+    return <div className="p-8 flex justify-center items-center h-[50vh]"><Spinner size="lg" /></div>;
   }
 
   if (role !== "Admin") {
@@ -83,6 +98,11 @@ export default function AdminRequestsPage() {
       </div>
     );
   }
+
+  const renderSortIcon = (column: string) => {
+    if (sortColumn !== column) return <span className="ml-1 opacity-0 group-hover:opacity-50 transition-opacity">↕</span>;
+    return sortDirection === "Asc" ? <span className="ml-1">↑</span> : <span className="ml-1">↓</span>;
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -94,20 +114,35 @@ export default function AdminRequestsPage() {
         <table className="min-w-full divide-y divide-slate-200">
           <thead className="bg-slate-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                {t("RequestNo")}
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer group hover:bg-slate-100 transition-colors"
+                onClick={() => handleSort("RequestNo")}
+              >
+                {t("RequestNo")} {renderSortIcon("RequestNo")}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                {t("Customer")}
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer group hover:bg-slate-100 transition-colors"
+                onClick={() => handleSort("CustomerName")}
+              >
+                {t("Customer")} {renderSortIcon("CustomerName")}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                {t("Date")}
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer group hover:bg-slate-100 transition-colors"
+                onClick={() => handleSort("CreatedAt")}
+              >
+                {t("Date")} {renderSortIcon("CreatedAt")}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                {t("Total")}
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer group hover:bg-slate-100 transition-colors"
+                onClick={() => handleSort("TotalAmount")}
+              >
+                {t("Total")} {renderSortIcon("TotalAmount")}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                {t("Status")}
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer group hover:bg-slate-100 transition-colors"
+                onClick={() => handleSort("Status")}
+              >
+                {t("Status")} {renderSortIcon("Status")}
               </th>
             </tr>
           </thead>
@@ -159,10 +194,16 @@ export default function AdminRequestsPage() {
       {totalPages > 1 && (
         <Pagination
           page={page + 1}
+          pageSize={pageSize}
+          totalCount={totalCount}
           totalPages={totalPages}
           hasNextPage={page < totalPages - 1}
           hasPreviousPage={page > 0}
           onPageChange={(newPage) => setPage(newPage - 1)}
+          onPageSizeChange={(newSize) => {
+            setPageSize(newSize);
+            setPage(0);
+          }}
         />
       )}
     </div>

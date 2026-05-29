@@ -39,6 +39,7 @@ public class RequestConfiguration : BaseEntityConfiguration<Request>
             .IsRequired();
 
         builder.HasIndex(r => r.Status);
+        builder.HasIndex(r => r.CreatedAt);
 
         // Items — owned by this aggregate
         builder.HasMany(r => r.Items)

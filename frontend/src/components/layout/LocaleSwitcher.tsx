@@ -3,6 +3,7 @@
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/navigation";
 import { useTransition } from "react";
+import { Button } from "@/components/ui/Button";
 
 export function LocaleSwitcher() {
   const locale = useLocale();
@@ -18,12 +19,13 @@ export function LocaleSwitcher() {
   };
 
   return (
-    <button
+    <Button
+      variant="secondary"
       onClick={switchLocale}
-      disabled={isPending}
-      className="text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium cursor-pointer disabled:opacity-50"
+      isLoading={isPending}
+      className="text-xs px-2 py-1"
     >
       {locale === "tr" ? "EN" : "TR"}
-    </button>
+    </Button>
   );
 }

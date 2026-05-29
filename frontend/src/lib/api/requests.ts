@@ -52,8 +52,12 @@ export interface SendQuotationInput {
 
 export const requestsApi = {
 
-  getAll: async (page: number = 0, pageSize: number = 10, token: string | null = null) => {
-    const res = await fetch(`${getApiUrl(API_ENDPOINTS.REQUESTS.BASE)}?page=${page}&pageSize=${pageSize}`, {
+  getAll: async (page: number = 0, pageSize: number = 10, sortColumn?: string, sortDirection?: string, token: string | null = null) => {
+    let url = `${getApiUrl(API_ENDPOINTS.REQUESTS.BASE)}?page=${page}&pageSize=${pageSize}`;
+    if (sortColumn) url += `&sortColumn=${sortColumn}`;
+    if (sortDirection) url += `&sortDirection=${sortDirection}`;
+
+    const res = await fetch(url, {
       method: 'GET',
       headers: getHeaders(token)
     });

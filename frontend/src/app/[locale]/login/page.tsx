@@ -9,19 +9,23 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default function LoginPage() {
+export default async function LoginPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const tAuth = await getTranslations({ locale, namespace: "Auth" });
+  const tNav = await getTranslations({ locale, namespace: "nav" });
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-4">
       <div className="w-full max-w-md">
         {/* Logo / Brand */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-white tracking-tight">Akıllı Teklif</h2>
+          <h2 className="text-3xl font-bold text-white tracking-tight">{tNav("title")}</h2>
           <p className="mt-2 text-sm text-blue-300">Smart Quotation Pricing Engine</p>
         </div>
 
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <h1 className="text-xl font-semibold text-gray-900 mb-6 text-center">Giriş Yap</h1>
+          <h1 className="text-xl font-semibold text-gray-900 mb-6 text-center">{tAuth("loginTitle")}</h1>
           <LoginForm />
         </div>
       </div>

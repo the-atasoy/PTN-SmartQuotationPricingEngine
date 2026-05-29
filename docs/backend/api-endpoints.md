@@ -187,7 +187,8 @@ Unhandled exceptions (e.g. `NotFoundException`, `UnauthorizedException`) are cau
 |---|---|---|---|---|
 | GET | `/api/requests?page=0&pageSize=10` | `Admin` | `ApiResponse<PaginatedResult<RequestListItemDto>>` | Paginated list of quotation requests |
 | GET | `/api/requests/{id}` | `Admin` | `ApiResponse<RequestDetailDto>` | Single request with items |
-| POST | `/api/requests` | `User` | File download | Create request + return Excel file as download |
+| GET | `/api/requests/{id}/excel` | `Admin` | File download | Download original Excel file |
+| POST | `/api/requests` | `User` | `ApiResponse<Guid>` | Create request |
 | PUT | `/api/requests/{id}/send` | `Admin` | `ApiResponse` | Finalize prices, send email, update product table |
 
 ### Excel
@@ -200,14 +201,18 @@ Unhandled exceptions (e.g. `NotFoundException`, `UnauthorizedException`) are cau
 
 ## Key Business Logic
 
-### `POST /api/requests` — Create Request & Export Excel
+### `POST /api/requests` — Create Request
 
 1. Validate input via `CreateRequestCommandValidator` (customer email required, at least one product line, valid quantities).
 2. Create `customer` record (or reuse by email).
 3. Create `request` record with status `Pending` and auto-generated `request_no`.
 4. Create `request_items` rows with `unit_price = 0` (prices not yet set).
-5. Generate Excel file with columns: `request_no`, `product_id`, `product_name`, `category`, `quantity`.
-6. Return Excel as `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` file download.
+5. Return the created `request_id`.
+
+### `GET /api/requests/{id}/excel` — Export Excel
+1. Fetch the request items by id.
+2. Generate Excel file with columns: `request_no`, `product_id`, `product_name`, `quantity`.
+3. Return Excel as `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` file download.
 
 ### `POST /api/excel/parse` — Parse Uploaded Excel
 

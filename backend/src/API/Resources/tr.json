@@ -38,6 +38,7 @@
   "Excel_Currency": "Para Birimi",
   "Excel_Totals": "TOPLAM",
   "Email_QuotationDetails": "Teklif Detayları",
+  "Email_Subject": "{0} Numaralı Teklif",
   "Email_Hello": "Merhaba {0},",
   "Email_QuotationIntro": "İşte teklifiniz (Talep No: {0}):",
   "Email_Product": "Ürün",
@@ -45,6 +46,8 @@
   "Email_UnitPrice": "Birim Fiyat",
   "Email_Discount": "İndirim",
   "Email_Total": "Toplam",
-  "Email_GrandTotal": "Genel Toplam: {0} ({1})",
+  "Email_DiscountPercent": "İndirim %",
+  "Email_GrandTotal": "Genel Toplam: {0}",
+  "Email_TotalDiscount": "Toplam İndirim: {0} ({1}%)",
   "Email_ThankYou": "Bizi tercih ettiğiniz için teşekkür ederiz!"
 }

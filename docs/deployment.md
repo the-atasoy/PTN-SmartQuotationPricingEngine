@@ -67,7 +67,7 @@ jobs:
       - name: Verify build output
         run: |
           docker run --rm \
-            -e NEXT_PUBLIC_API_URL=http://backend:5000 \
+            -e NEXT_PUBLIC_API_URL=http://backend:5100 \
             smart-quotation-frontend \
             npm run build
 ```

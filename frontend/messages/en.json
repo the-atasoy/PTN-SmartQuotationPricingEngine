@@ -92,7 +92,7 @@
     "UnitPrice": "Unit Price",
     "Discount": "Discount",
     "LineTotal": "Line Total",
-    "NoPreviousPrice": "No previous price",
+    "NoPreviousPrice": "No quotation value has been entered yet",
     "GrandTotal": "Grand Total",
     "SubmitQuotation": "Submit Quotation",
     "FinalQuotation": "Final Quotation",

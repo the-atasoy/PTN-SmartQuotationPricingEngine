@@ -91,7 +91,7 @@
     "UnitPrice": "Birim Fiyat",
     "Discount": "İskonto",
     "LineTotal": "Satır Toplamı",
-    "NoPreviousPrice": "Önceki fiyat yok",
+    "NoPreviousPrice": "Henüz teklif değeri girilmemiş",
     "GrandTotal": "Genel Toplam",
     "SubmitQuotation": "Teklifi Gönder",
     "FinalQuotation": "Nihai Teklif",
