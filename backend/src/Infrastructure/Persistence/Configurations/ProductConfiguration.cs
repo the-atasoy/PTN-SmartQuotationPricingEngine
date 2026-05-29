@@ -20,6 +20,11 @@ public class ProductConfiguration : BaseEntityConfiguration<Product>
             .HasPrecision(18, 2)
             .IsRequired();
 
+        builder.Property(p => p.BasePriceCurrency)
+            .HasColumnName("base_price_currency")
+            .HasConversion<int>()
+            .IsRequired();
+
         builder.Property(p => p.LastRequestPrice)
             .HasColumnName("last_request_price")
             .HasPrecision(18, 2);

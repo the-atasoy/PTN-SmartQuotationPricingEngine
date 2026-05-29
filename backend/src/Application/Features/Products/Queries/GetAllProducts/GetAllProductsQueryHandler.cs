@@ -36,6 +36,7 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, A
                 Id = p.Id,
                 Name = p.Name,
                 BasePrice = p.BasePrice,
+                BasePriceCurrency = p.BasePriceCurrency,
                 LastRequestPrice = request.IsAdmin ? p.LastRequestPrice : null,
                 LastRequestCurrency = request.IsAdmin ? p.LastRequestCurrency : null,
                 LastRequestDate = request.IsAdmin ? p.LastRequestDate : null
