@@ -48,6 +48,7 @@ export default function AdminRequestsPage() {
 
   useEffect(() => {
     if (role === "Admin") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       void fetchRequests(page, sortColumn, sortDirection);
     }
   }, [fetchRequests, page, sortColumn, sortDirection, role]);

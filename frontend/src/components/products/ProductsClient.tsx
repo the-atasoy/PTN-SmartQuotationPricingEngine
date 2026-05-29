@@ -35,6 +35,7 @@ export function ProductsClient() {
 
   // Reset page when search changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(0);
   }, [debouncedSearch]);
 
