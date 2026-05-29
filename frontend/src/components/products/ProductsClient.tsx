@@ -13,6 +13,7 @@ interface Product {
   name: string;
   basePrice: number;
   lastRequestPrice: number | null;
+  lastRequestCurrency: number | null;
   lastRequestDate: string | null;
 }
 

@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { getApiUrl } from "@/lib/api-endpoints";
 import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
-import { formatCurrencyEnum } from "@/lib/enums";
 
 interface PriceHistoryDto {
   id: string;
@@ -31,36 +30,48 @@ export default function ProductPriceHistoryPage() {
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
 
-  useEffect(() => {
-    fetchHistory(page);
-  }, [page, productId]);
+  const fetchHistory = useCallback(
+    async (pageIndex: number) => {
+      try {
+        setLoading(true);
+        const res = await fetch(
+          `${getApiUrl("/api/v1/products")}/${productId}/price-history?page=${pageIndex}&pageSize=${pageSize}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              ...(accessToken
+                ? { Authorization: `Bearer ${accessToken}` }
+                : {}),
+            },
+          },
+        );
 
-  const fetchHistory = async (pageIndex: number) => {
-    try {
-      setLoading(true);
-      const res = await fetch(
-        `${getApiUrl('/api/v1/products')}/${productId}/price-history?page=${pageIndex}&pageSize=${pageSize}`, 
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {})
-          }
+        if (!res.ok) throw new Error("Failed to fetch price history");
+
+        const data = (await res.json()) as {
+          data: {
+            items: PriceHistoryDto[];
+            totalCount: number;
+            totalPages: number;
+          };
+        };
+        if (data?.data) {
+          setHistory(data.data.items);
+          setTotalPages(data.data.totalPages);
         }
-      );
-      
-      if (!res.ok) throw new Error('Failed to fetch price history');
-      
-      const data = await res.json() as { data: { items: PriceHistoryDto[], totalCount: number, totalPages: number } };
-      if (data?.data) {
-        setHistory(data.data.items);
-        setTotalPages(data.data.totalPages);
+      } catch (error) {
+        console.error("Failed to fetch price history", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch price history", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [accessToken, pageSize, productId],
+  );
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchHistory(page);
+  }, [fetchHistory, page, productId]);
 
   if (loading && history.length === 0) {
     return <div className="p-8 text-center">{tCommon("Loading")}</div>;
@@ -69,7 +80,9 @@ export default function ProductPriceHistoryPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-slate-900">{t("PriceHistoryTitle")}</h1>
+        <h1 className="text-3xl font-bold text-slate-900">
+          {t("PriceHistoryTitle")}
+        </h1>
         <p className="text-slate-500 mt-2">{t("PriceHistoryDesc")}</p>
       </div>
 
@@ -77,10 +90,18 @@ export default function ProductPriceHistoryPage() {
         <table className="min-w-full divide-y divide-slate-200">
           <thead className="bg-slate-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t("Date")}</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t("QuotedPrice")}</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t("RequestNo")}</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t("Customer")}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                {t("Date")}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                {t("QuotedPrice")}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                {t("RequestNo")}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                {t("Customer")}
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-slate-200">
@@ -90,7 +111,7 @@ export default function ProductPriceHistoryPage() {
                   {new Date(item.createdAt).toLocaleString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                  {formatPrice(item.price)} {formatCurrencyEnum(item.currency)}
+                  {formatPrice(item.price, item.currency)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                   {item.requestNo}
@@ -102,7 +123,10 @@ export default function ProductPriceHistoryPage() {
             ))}
             {history.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
+                <td
+                  colSpan={4}
+                  className="px-6 py-12 text-center text-slate-500"
+                >
                   {t("NoPriceHistory")}
                 </td>
               </tr>

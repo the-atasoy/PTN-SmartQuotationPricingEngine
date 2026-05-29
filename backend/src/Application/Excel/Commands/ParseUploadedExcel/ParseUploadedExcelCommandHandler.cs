@@ -55,8 +55,9 @@ public class ParseUploadedExcelCommandHandler : IRequestHandler<ParseUploadedExc
             if (products.TryGetValue(row.ProductId, out var product))
             {
                 row.LastRequestPrice = product.LastRequestPrice;
+                row.LastRequestCurrency = product.LastRequestCurrency;
                 row.LastRequestDate = product.LastRequestDate;
-                row.HasPreviousPrice = product.LastRequestPrice.HasValue;
+                row.HasPreviousPrice = product.LastRequestPrice.HasValue && product.LastRequestCurrency.HasValue;
             }
         }
 

@@ -33,9 +33,10 @@ public class ExcelService : IExcelService
         worksheet.Cells[1, 6].Value = "Discount (Per Unit)";
         worksheet.Cells[1, 7].Value = "Discount % (Per Unit)";
         worksheet.Cells[1, 8].Value = "Line Total";
+        worksheet.Cells[1, 9].Value = "Currency";
 
         // Make headers bold and colorful
-        using (var range = worksheet.Cells[1, 1, 1, 8])
+        using (var range = worksheet.Cells[1, 1, 1, 9])
         {
             range.Style.Font.Bold = true;
             range.Style.Font.Color.SetColor(Color.White);
@@ -54,8 +55,9 @@ public class ExcelService : IExcelService
             worksheet.Cells[row, 2].Value = item.ProductId.ToString();
             worksheet.Cells[row, 3].Value = item.Product.Name;
             worksheet.Cells[row, 4].Value = item.Quantity;
-            worksheet.Cells[row, 5].Value = item.Product.LastRequestPrice ?? 0;
+            worksheet.Cells[row, 5].Value = (item.Product.LastRequestCurrency == request.Currency ? item.Product.LastRequestPrice : 0) ?? 0;
             worksheet.Cells[row, 6].Value = 0; // Default discount is 0
+            worksheet.Cells[row, 9].Value = request.Currency.ToString();
             
             // Highlight editable fields
             worksheet.Cells[row, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -86,7 +88,7 @@ public class ExcelService : IExcelService
         var lastDataRow = row - 1;
 
         // Apply borders to all data cells
-        using (var dataRange = worksheet.Cells[1, 1, lastDataRow, 8])
+        using (var dataRange = worksheet.Cells[1, 1, lastDataRow, 9])
         {
             dataRange.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
             dataRange.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
@@ -99,7 +101,7 @@ public class ExcelService : IExcelService
         }
 
         // Totals Row Styling
-        using (var totalRange = worksheet.Cells[row, 1, row, 8])
+        using (var totalRange = worksheet.Cells[row, 1, row, 9])
         {
             totalRange.Style.Font.Bold = true;
             totalRange.Style.Font.Color.SetColor(Color.White);
@@ -120,6 +122,7 @@ public class ExcelService : IExcelService
         worksheet.Cells[row, 8].Formula = $"SUM(H2:H{lastDataRow})";
         worksheet.Cells[row, 8].Style.Numberformat.Format = "#,##0.00";
         worksheet.Cells[row, 8].Style.Font.Bold = true;
+        worksheet.Cells[row, 9].Value = request.Currency.ToString();
 
         worksheet.Cells.AutoFitColumns();
 
