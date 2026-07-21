@@ -37,22 +37,21 @@ services:
       start_period: 10s
 
   backend:
-    image: smart-quotation-backend
-    build: ./backend
+    image: ghcr.io/the-atasoy/ptn-smartquotation-backend:latest
     restart: unless-stopped
     ports:
       - "5100:5100"
     networks:
       - smart-network
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:5100
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=smart_quotation;Username=postgres;Password=postgres
-      - Jwt__Secret=HtGbRs3LxtCeEvA0Xnbkw6hbnpuIXVSlCIlOSNU3+Nu3ZgwQ4d5+H/yu+baR1bmiqkP+A5fkDaK+xTuBQhdKvA==
-      - Jwt__Issuer=smart-quotation
-      - Jwt__Audience=smart-quotation
-      - Email__SmtpHost=mailpit
-      - Email__SmtpPort=1025
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:5100
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=smart_quotation;Username=postgres;Password=postgres
+      Jwt__Secret: HtGbRs3LxtCeEvA0Xnbkw6hbnpuIXVSlCIlOSNU3+Nu3ZgwQ4d5+H/yu+baR1bmiqkP+A5fkDaK+xTuBQhdKvA==
+      Jwt__Issuer: smart-quotation
+      Jwt__Audience: smart-quotation
+      Email__SmtpHost: mailpit
+      Email__SmtpPort: 1025
     depends_on:
       postgres:
         condition: service_healthy
@@ -62,27 +61,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-
-  # frontend:
-  #   image: smart-quotation-frontend
-  #   build: ./frontend
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - smart-network
-  #   environment:
-  #     - NEXT_PUBLIC_API_URL=http://backend:5100
-  #     - NEXT_PUBLIC_DEFAULT_LOCALE=tr
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "wget --spider -q http://localhost:3000 || exit 1"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
-  #     start_period: 10s
 
 volumes:
   postgres-data:
