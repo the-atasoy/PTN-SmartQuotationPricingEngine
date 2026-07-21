@@ -23,9 +23,8 @@ COPY . .
 
 RUN dotnet build "src/API/API.csproj" \
     -c Release \
-    --no-restore \
-    -o /app/build
-
+    --no-restore 
+    
 FROM build AS publish
 
 RUN dotnet publish "src/API/API.csproj" \
