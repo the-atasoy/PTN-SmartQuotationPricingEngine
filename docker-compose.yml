@@ -3,6 +3,7 @@ version: "3.9"
 services:
   postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     ports:
       - "5432:5432"
     networks:
@@ -22,6 +23,7 @@ services:
 
   mailpit:
     image: axllent/mailpit:latest
+    restart: unless-stopped
     ports:
       - "1025:1025"
       - "8025:8025"
@@ -37,6 +39,7 @@ services:
   backend:
     image: smart-quotation-backend
     build: ./backend
+    restart: unless-stopped
     ports:
       - "5100:5100"
     networks:
@@ -63,6 +66,7 @@ services:
   frontend:
     image: smart-quotation-frontend
     build: ./frontend
+    restart: unless-stopped
     ports:
       - "3000:3000"
     networks:
