@@ -3,8 +3,11 @@ version: "3.9"
 services:
   postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     ports:
       - "5432:5432"
+    networks:
+      - smart-network
     environment:
       POSTGRES_DB: smart_quotation
       POSTGRES_USER: postgres
@@ -15,12 +18,17 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
   mailpit:
     image: axllent/mailpit:latest
+    restart: unless-stopped
     ports:
       - "1025:1025"
       - "8025:8025"
+    networks:
+      - smart-network
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://localhost:8025 || exit 1"]
       interval: 10s
@@ -29,9 +37,13 @@ services:
       start_period: 10s
 
   backend:
+    image: smart-quotation-backend
     build: ./backend
+    restart: unless-stopped
     ports:
       - "5100:5100"
+    networks:
+      - smart-network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:5100
@@ -52,9 +64,13 @@ services:
       start_period: 10s
 
   frontend:
+    image: smart-quotation-frontend
     build: ./frontend
+    restart: unless-stopped
     ports:
       - "3000:3000"
+    networks:
+      - smart-network
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:5100
       - NEXT_PUBLIC_DEFAULT_LOCALE=tr
@@ -67,3 +83,9 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+volumes:
+  postgres-data:
+
+networks:
+  smart-network:
